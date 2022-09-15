@@ -1,0 +1,41 @@
+$primary-color: #fe8e26;
+$primary-text-color: #fff;
+@mixin farmingBtn($color, $bgColor) {
+    cursor: pointer;
+    background: $bgColor;
+    color: $color;
+    text-align: center;
+    padding: 8px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        margin-top: 5px;
+    }
+}
+.farming {
+    &-btn {
+        &--light {
+            @include farmingBtn($primary-text-color, $primary-color);
+        }
+    }
+    &-card {
+        margin: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        border: 2px solid #2d2c2d;
+        padding: 10px;
+        &--expand {
+            animation: fade_in_show 0.5s;
+        }
+    }
+}
+
+@keyframes fade_in_show {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
