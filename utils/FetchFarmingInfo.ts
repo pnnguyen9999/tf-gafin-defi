@@ -8,6 +8,7 @@ import {
   ContractCallReturnContext,
 } from "ethereum-multicall";
 import axios from "axios";
+
 export interface FarmingInfoData {
   result: {
     [key: string]: ContractCallReturnContext;
@@ -22,6 +23,7 @@ const multicall = new Multicall({
   nodeUrl: GafinConfig.BSC_RPC,
   tryAggregate: false,
 });
+
 class PoolSingle {
   private poolData: any;
   private poolStartTime = 0;
@@ -29,7 +31,7 @@ class PoolSingle {
   private rewardPerSec = 0;
   private rewardTokenFiatPrice = 0;
   private depositTokenFiatPrice = 0;
-  public totalReward = 0;
+  private totalReward = 0;
   private totalDeposit = 0;
   public APR = 0;
 
@@ -68,8 +70,7 @@ class PoolSingle {
     /** @calculating APR */
     const TOTAL_DAY = (this.poolEndTime - this.poolStartTime) / 86400;
     console.log({ TOTAL_DAY, TOTAL_REWARD_FIAT, TOTAL_DEPOSIT_FIAT });
-    this.APR =
-      (TOTAL_REWARD_FIAT * 365) / (TOTAL_DEPOSIT_FIAT * (TOTAL_DAY / 86400));
+    this.APR = (TOTAL_REWARD_FIAT * 365) / (TOTAL_DEPOSIT_FIAT * TOTAL_DAY);
   }
 }
 
@@ -134,4 +135,5 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     result: results.results,
   };
 };
+
 export default useFetchFarmingInfo;
