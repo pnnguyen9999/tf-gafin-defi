@@ -1,8 +1,7 @@
 <template>
-  <!-- <Tutorial/> -->
   <div class="defi">
     <div class="container">
-      <Home :homeType="passHome" />
+      <Home />
     </div>
   </div>
 </template>
@@ -21,14 +20,10 @@ import Vue from "vue";
 import Home from "@/pages/Home.vue";
 import "bootstrap/scss/bootstrap.scss";
 import "../style/main.scss";
+import "animate.css";
 
 export default Vue.extend({
   name: "IndexPage",
   components: { Home },
-  data() {
-    return {
-      passHome: "this is passHome",
-    };
-  },
 });
 </script>

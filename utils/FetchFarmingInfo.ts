@@ -1,18 +1,16 @@
 import Web3 from "web3";
 import GafinConfig from "@/constant/config/index";
 import FARMING_SMC_ABI from "@/constant/abi/FarmingContract.abi.json";
+import TOP_SMC_ABI from "@/constant/abi/TopContract.abi.json";
 import {
   Multicall,
   ContractCallResults,
   ContractCallContext,
-  ContractCallReturnContext,
 } from "ethereum-multicall";
 import axios from "axios";
 
 export interface FarmingInfoData {
-  result: {
-    [key: string]: ContractCallReturnContext;
-  };
+  singlePools: PoolSingle[];
 }
 enum PoolNumber {
   POOL1 = 0,
@@ -24,7 +22,7 @@ const multicall = new Multicall({
   tryAggregate: false,
 });
 
-class PoolSingle {
+export class PoolSingle {
   private poolData: any;
   private poolStartTime = 0;
   private poolEndTime = 0;
@@ -33,20 +31,34 @@ class PoolSingle {
   private depositTokenFiatPrice = 0;
   private totalReward = 0;
   private totalDeposit = 0;
+  /**
+   * @APR -> chỉ số APR của pool
+   * @DEPOSIT_TOKEN_CONTRACT_ADDRESS -> trả về address của token deposit
+   * @DEPOSIT_TOKEN_ABI -> trả về ABI JSON của token deposit
+   */
   public APR = 0;
+  /* return pool info */
+  public DEPOSIT_TOKEN_CONTRACT_ADDRESS = "";
+  public DEPOSIT_TOKEN_ABI = null as unknown;
 
   constructor({
     _poolData,
     _rewardTokenFiatPrice,
     _depositTokenFiatPrice,
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS,
+    _DEPOSIT_TOKEN_ABI,
   }: {
     _poolData: any;
     _rewardTokenFiatPrice: number;
     _depositTokenFiatPrice: number;
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: string;
+    _DEPOSIT_TOKEN_ABI: unknown;
   }) {
     this.poolData = _poolData;
     this.rewardTokenFiatPrice = _rewardTokenFiatPrice;
     this.depositTokenFiatPrice = _depositTokenFiatPrice;
+    this.DEPOSIT_TOKEN_CONTRACT_ADDRESS = _DEPOSIT_TOKEN_CONTRACT_ADDRESS;
+    this.DEPOSIT_TOKEN_ABI = _DEPOSIT_TOKEN_ABI;
   }
 
   public async init() {
@@ -103,6 +115,12 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     contractCallContext
   );
   const INFO_POOL1 =
+    results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL1]
+      .returnValues;
+  const INFO_POOL2 =
+    results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL2]
+      .returnValues;
+  const INFO_POOL3 =
     results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL3]
       .returnValues;
 
@@ -117,22 +135,44 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     .then((res) => {
       return res.data.data.price;
     });
-
+  /**
+   * @poolCalculating -----------
+   */
   /** @newPoolInstance */
   const pool1 = new PoolSingle({
     _poolData: INFO_POOL1,
     _rewardTokenFiatPrice: HERA_PRICE,
     _depositTokenFiatPrice: TOP_PRICE,
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: GafinConfig.TOP_ADDRESS,
+    _DEPOSIT_TOKEN_ABI: TOP_SMC_ABI,
+  });
+  const pool2 = new PoolSingle({
+    _poolData: INFO_POOL2,
+    _rewardTokenFiatPrice: HERA_PRICE,
+    _depositTokenFiatPrice: TOP_PRICE,
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: GafinConfig.TOP_ADDRESS,
+    _DEPOSIT_TOKEN_ABI: TOP_SMC_ABI,
+  });
+  const pool3 = new PoolSingle({
+    _poolData: INFO_POOL3,
+    _rewardTokenFiatPrice: HERA_PRICE,
+    _depositTokenFiatPrice: TOP_PRICE,
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: GafinConfig.TOP_ADDRESS,
+    _DEPOSIT_TOKEN_ABI: TOP_SMC_ABI,
   });
 
   /** @initializing pool 1*/
   pool1.init();
+  pool2.init();
+  pool3.init();
 
   /** @loggingInfo */
   console.log(pool1.APR);
+  console.log(pool2.APR);
+  console.log(pool3.APR);
 
   return {
-    result: results.results,
+    singlePools: [pool1, pool2, pool3],
   };
 };
 

@@ -1,12 +1,13 @@
 <template>
   <div>
-    <button v-show="!GafinCryptoData.web3" @click="GafinCryptoData.connect()">
-      connect wallet
-    </button>
-    {{ GafinCryptoData.address }}
+    <FarmingPanel />
     <div class="col-12">
       <div class="row">
-        <FarmingCard v-for="(data, index) in dataFarmingCard" :key="index" />
+        <FarmingCard
+          v-for="(data, index) in dataFetchFarmingInfo.singlePools"
+          :dataFarmingCard="data"
+          :key="index"
+        />
       </div>
     </div>
   </div>
@@ -17,6 +18,7 @@
 import Tabs from "@/components/Tabs/Tabs.vue";
 import Tab from "@/components/Tabs/Tab.vue";
 import FarmingCard from "@/components/FarmingCard/farming-card.vue";
+import FarmingPanel from "@/components/FarmingPanel.vue";
 import GafinCrypto from "@/utils/GafinCrypto";
 import useFetchFarmingInfo, { FarmingInfoData } from "@/utils/FetchFarmingInfo";
 import Vue from "vue";
@@ -27,17 +29,11 @@ export default Vue.extend({
     Tabs,
     Tab,
     FarmingCard,
+    FarmingPanel,
   },
-  props: {
-    homeType: {
-      type: String,
-      required: true,
-    },
-  },
+  props: {},
   data() {
     return {
-      dataFarmingCard: [0, 1, 2],
-      GafinCryptoData: GafinCrypto,
       dataFetchFarmingInfo: {} as FarmingInfoData,
       intervalFetching: null as unknown as NodeJS.Timer,
     };
