@@ -43,6 +43,7 @@ class GafinCryptoClass {
       }
     }
   };
+
   getAllowance = async ({
     SMC_ADDRESS,
     SMC_ABI,
@@ -50,7 +51,6 @@ class GafinCryptoClass {
     SMC_ADDRESS: string;
     SMC_ABI: any;
   }) => {
-    console.log({ SMC_ADDRESS, SMC_ABI });
     const contract = new this.web3.eth.Contract(SMC_ABI, SMC_ADDRESS);
     const contractAllowance = await contract.methods
       .allowance(this.address, GafinConfig.FARMING_CONTRACT_ADDRESS)
@@ -58,6 +58,7 @@ class GafinCryptoClass {
     console.log(contractAllowance != 0);
     return contractAllowance != 0;
   };
+
   approveContract = async ({
     SMC_ADDRESS,
     SMC_ABI,

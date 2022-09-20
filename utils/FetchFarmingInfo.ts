@@ -8,6 +8,7 @@ import {
   ContractCallContext,
 } from "ethereum-multicall";
 import axios from "axios";
+import GafinCrypto from "./GafinCrypto";
 
 export interface FarmingInfoData {
   singlePools: PoolSingle[];
@@ -37,6 +38,8 @@ export class PoolSingle {
    * @DEPOSIT_TOKEN_ABI -> trả về ABI JSON của token deposit
    */
   public APR = 0;
+  public allowance = false;
+  public allowanceLoading = false;
   /* return pool info */
   public DEPOSIT_TOKEN_CONTRACT_ADDRESS = "";
   public DEPOSIT_TOKEN_ABI = null as unknown;
@@ -83,6 +86,30 @@ export class PoolSingle {
     const TOTAL_DAY = (this.poolEndTime - this.poolStartTime) / 86400;
     console.log({ TOTAL_DAY, TOTAL_REWARD_FIAT, TOTAL_DEPOSIT_FIAT });
     this.APR = (TOTAL_REWARD_FIAT * 365) / (TOTAL_DEPOSIT_FIAT * TOTAL_DAY);
+  }
+  public async checkAllowance() {
+    this.allowance = await GafinCrypto.getAllowance({
+      SMC_ADDRESS: this.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
+      SMC_ABI: this.DEPOSIT_TOKEN_ABI,
+    });
+  }
+
+  public async setAllowance() {
+    this.allowanceLoading = true;
+    await GafinCrypto.approveContract({
+      SMC_ADDRESS: this.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
+      SMC_ABI: this.DEPOSIT_TOKEN_ABI,
+      callback: async (data: any) => {
+        if (data.status === "EXECUTE_APPROVE_SUCCESS") {
+          console.log("approved");
+          this.allowance = true;
+          this.allowanceLoading = false;
+        } else if (data.status === "EXECUTE_APPROVE_FAIL") {
+          console.log("execute fail");
+          this.allowanceLoading = false;
+        }
+      },
+    });
   }
 }
 
@@ -150,7 +177,7 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     _poolData: INFO_POOL2,
     _rewardTokenFiatPrice: HERA_PRICE,
     _depositTokenFiatPrice: TOP_PRICE,
-    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: GafinConfig.TOP_ADDRESS,
+    _DEPOSIT_TOKEN_CONTRACT_ADDRESS: GafinConfig.HERA_ADDRESS,
     _DEPOSIT_TOKEN_ABI: TOP_SMC_ABI,
   });
   const pool3 = new PoolSingle({
@@ -161,7 +188,7 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     _DEPOSIT_TOKEN_ABI: TOP_SMC_ABI,
   });
 
-  /** @initializing pool 1*/
+  /** @initializing pool*/
   pool1.init();
   pool2.init();
   pool3.init();

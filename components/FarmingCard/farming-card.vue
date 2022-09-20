@@ -34,12 +34,12 @@
       </div>
       <div
         class="farming-btn--light"
-        v-show="gafinCryptoData.web3 && !computedCheckAllowance"
+        v-show="gafinCryptoData.web3 && !dataFarmingCard?.allowance"
         @click="handleApprove()"
       >
         <div
           class="spinner-border spinner-border-sm mx-2"
-          v-show="waitingAllowance"
+          v-show="dataFarmingCard?.allowanceLoading"
         />
         Enable Contract
       </div>
@@ -64,6 +64,7 @@ import { mapState, mapMutations } from "vuex";
 import ViewType from "@/constant/UI";
 import { PoolSingle } from "~/utils/FetchFarmingInfo";
 import GafinCrypto from "@/utils/GafinCrypto";
+import EventBus from "~/event/EventBus";
 
 export interface IFarmingCard {
   name: string;
@@ -82,63 +83,30 @@ export default Vue.extend({
       maxHeight: "100px",
       ViewType: ViewType,
       gafinCryptoData: GafinCrypto,
-      waitingAllowance: false,
+      isApproved: false,
+      depositToken: {
+        address: this.dataFarmingCard?.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
+        ABI: this.dataFarmingCard?.DEPOSIT_TOKEN_ABI,
+      },
     };
   },
   computed: {
     ...mapState("UserInterfaceState", {
       viewType: "viewType",
     }),
-    ...mapState("Web3Store", {
-      checkAllowanceSingleTokenVuex: "checkAllowanceSingleToken",
-    }),
-    computedCheckAllowance(): boolean {
-      return (
-        this.checkAllowanceSingleTokenVuex.status &&
-        this.checkAllowanceSingleTokenVuex.token ==
-          this.dataFarmingCard.DEPOSIT_TOKEN_CONTRACT_ADDRESS
-      );
-    },
   },
+  updated() {},
   methods: {
-    ...mapMutations({
-      setAllowanceSingleTokenVuex: "Web3Store/setAllowanceSingleToken",
-    }),
     showExpand() {
       this.isShowExpand = !this.isShowExpand;
     },
     async handleConnectWallet() {
       await this.gafinCryptoData.connect();
-      const isAllowance = await this.gafinCryptoData.getAllowance({
-        SMC_ADDRESS: this.dataFarmingCard.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
-        SMC_ABI: this.dataFarmingCard.DEPOSIT_TOKEN_ABI,
-      });
-      this.setAllowanceSingleTokenVuex({
-        TOKEN_ADDRESS: this.dataFarmingCard.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
-        status: isAllowance,
-      });
+      EventBus.$emit("checkAllAllowance");
     },
     async handleApprove() {
-      this.waitingAllowance = true;
-      await this.gafinCryptoData.approveContract({
-        SMC_ADDRESS: this.dataFarmingCard.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
-        SMC_ABI: this.dataFarmingCard.DEPOSIT_TOKEN_ABI,
-        callback: async (data: any) => {
-          if (data.status === "EXECUTE_APPROVE_SUBMIT") {
-          } else if (data.status === "EXECUTE_APPROVE_SUCCESS") {
-            console.log("approved");
-            this.setAllowanceSingleTokenVuex({
-              TOKEN_ADDRESS:
-                this.dataFarmingCard.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
-              status: true,
-            });
-            this.waitingAllowance = false;
-          } else if (data.status === "EXECUTE_APPROVE_FAIL") {
-            console.log("execute fail");
-            this.waitingAllowance = false;
-          }
-        },
-      });
+      await this.dataFarmingCard.setAllowance();
+      EventBus.$emit("checkAllAllowance");
     },
   },
 });

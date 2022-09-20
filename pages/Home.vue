@@ -22,6 +22,7 @@ import FarmingPanel from "@/components/FarmingPanel.vue";
 import GafinCrypto from "@/utils/GafinCrypto";
 import useFetchFarmingInfo, { FarmingInfoData } from "@/utils/FetchFarmingInfo";
 import Vue from "vue";
+import EventBus from "~/event/EventBus";
 
 export default Vue.extend({
   name: "Home-DEFI",
@@ -37,6 +38,16 @@ export default Vue.extend({
       dataFetchFarmingInfo: {} as FarmingInfoData,
       intervalFetching: null as unknown as NodeJS.Timer,
     };
+  },
+  created() {
+    EventBus.$on("checkAllAllowance", this.checkAllowanceAll.bind(this));
+  },
+  methods: {
+    checkAllowanceAll() {
+      this.dataFetchFarmingInfo.singlePools.forEach((pool) => {
+        pool.checkAllowance();
+      });
+    },
   },
   mounted() {
     const fetchingData = async () => {
