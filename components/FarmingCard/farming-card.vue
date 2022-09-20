@@ -13,11 +13,15 @@
       <div class="farming-card-content">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
-          <div class="">TOKEN - BUNI</div>
+          <div class="">
+            {{
+              `${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
+            }}
+          </div>
         </div>
         <div class="d-flex justify-content-between my-1">
           <div class="">APR</div>
-          <div class="">{{ dataFarmingCard?.APR }}</div>
+          <div class="">{{ dataFarmingCard.APR.toFixed(2) }} %</div>
         </div>
         <div class="d-flex justify-content-between my-1">
           <div class="">Earn</div>
@@ -62,9 +66,9 @@
 import Vue, { PropType } from "vue";
 import { mapState, mapMutations } from "vuex";
 import ViewType from "@/constant/UI";
-import { PoolSingle } from "~/utils/FetchFarmingInfo";
 import GafinCrypto from "@/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
+import PoolSingle from "~/utils/SinglePool";
 
 export interface IFarmingCard {
   name: string;
@@ -84,10 +88,6 @@ export default Vue.extend({
       ViewType: ViewType,
       gafinCryptoData: GafinCrypto,
       isApproved: false,
-      depositToken: {
-        address: this.dataFarmingCard?.DEPOSIT_TOKEN_CONTRACT_ADDRESS,
-        ABI: this.dataFarmingCard?.DEPOSIT_TOKEN_ABI,
-      },
     };
   },
   computed: {
