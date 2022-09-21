@@ -22,6 +22,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    // '~plugins/VueModal.plugin.js'
+    '~plugins/CustomModal.plugin.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

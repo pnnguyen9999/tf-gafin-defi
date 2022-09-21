@@ -10,7 +10,7 @@
       class="farming-card animate__animated animate__fadeIn"
       v-show="viewType === ViewType.SQUARE"
     >
-      <div class="farming-card-content">
+      <div class="farming-card-content mb-3">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
           <div class="">
@@ -47,6 +47,13 @@
         />
         Enable Contract
       </div>
+      <div
+        v-show="gafinCryptoData.web3 && dataFarmingCard?.allowance"
+        class="stake-btn-wrapper"
+      >
+        <div class="btn-deposit" @click="showModal">Deposit</div>
+        <div class="btn-withdraw">Withdraw</div>
+      </div>
       <div class="farming-btn--detail" @click="showExpand">
         Detail
         <img class="detail-icon" src="@/assets/img/detail-icon.png" />
@@ -69,6 +76,7 @@ import ViewType from "@/constant/UI";
 import GafinCrypto from "@/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
 import PoolSingle from "~/utils/SinglePool";
+import { StakeModalParams } from "~/lib/CustomModal/AppModal.vue";
 
 export interface IFarmingCard {
   name: string;
@@ -81,6 +89,7 @@ export default Vue.extend({
       type: Object as PropType<PoolSingle>,
     },
   },
+
   data() {
     return {
       isShowExpand: false,
@@ -107,6 +116,17 @@ export default Vue.extend({
     async handleApprove() {
       await this.dataFarmingCard.setAllowance();
       EventBus.$emit("checkAllAllowance");
+    },
+    showModal() {
+      const params: StakeModalParams = {
+        modalTitle: "Stake LP Tokens",
+        tokenName: `${this.dataFarmingCard.tokenInfo.tokenDeposit.name} - ${this.dataFarmingCard.tokenInfo.tokenReward.name}`,
+        tokenBalance: 0,
+        onConfirm: () => {
+          return alert("hello");
+        },
+      };
+      this.$stakeModal.show(params);
     },
   },
 });

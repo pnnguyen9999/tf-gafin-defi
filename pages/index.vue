@@ -2,6 +2,7 @@
   <div class="defi">
     <div class="container">
       <Home />
+      <StakeModal />
     </div>
   </div>
 </template>

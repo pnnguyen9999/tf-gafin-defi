@@ -15,6 +15,18 @@ $primary-text-color: #fff;
         margin-top: 5px;
     }
 }
+@mixin normalBtn() {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.05);
+    }
+}
 
 .farming {
     &-btn {
@@ -39,6 +51,25 @@ $primary-text-color: #fff;
         .token-img {
             width: 48px;
             border-radius: 50px;
+        }
+        .stake-btn-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .btn-deposit {
+                @include normalBtn();
+                width: 48%;
+                background-color: #201a0b;
+                border: 1px solid #fe8e26;
+                color: #fe8e26;
+            }
+            .btn-withdraw {
+                width: 48%;
+                @include normalBtn();
+                background-color: #fe8e26;
+                border: 1px solid #fe8e26;
+                color: #fff;
+            }
         }
     }
     &-content-rectangle {
