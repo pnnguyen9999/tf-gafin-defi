@@ -76,7 +76,7 @@ import ViewType from "@/constant/UI";
 import GafinCrypto from "@/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
 import PoolSingle from "~/utils/SinglePool";
-import { StakeModalParams } from "~/lib/CustomModal/AppModal.vue";
+import { StakeModalParams } from "~/lib/CustomModal/index.vue";
 
 export interface IFarmingCard {
   name: string;
@@ -121,7 +121,7 @@ export default Vue.extend({
       const params: StakeModalParams = {
         modalTitle: "Stake LP Tokens",
         tokenName: `${this.dataFarmingCard.tokenInfo.tokenDeposit.name} - ${this.dataFarmingCard.tokenInfo.tokenReward.name}`,
-        tokenBalance: 0,
+        tokenBalance: Math.random(),
         onConfirm: () => {
           return alert("hello");
         },

@@ -1,0 +1,27 @@
+@mixin farmingBtn($color, $bgColor) {
+    cursor: pointer;
+    background: $bgColor;
+    color: $color;
+    text-align: center;
+    padding: 8px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        margin-top: 5px;
+    }
+}
+@mixin normalBtn() {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.05);
+    }
+}
