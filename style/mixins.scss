@@ -25,3 +25,17 @@
         transform: scale(1.05);
     }
 }
+@mixin flex-row-between() {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+@mixin flex-row-center() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@mixin flex-column-center() {
+    @include flex-row-center();
+    flex-direction: column;
+}
