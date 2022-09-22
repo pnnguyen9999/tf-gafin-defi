@@ -4,6 +4,31 @@ $primary-text-color: #fff;
 body {
     background-color: #000 !important;
 }
+.fnt {
+    &-bold {
+        font-weight: bold;
+    }
+}
+.harvest {
+    &-label {
+        color: #ef466f;
+        font-size: 13pt;
+        font-weight: bold;
+    }
+    &-btn {
+        @include normalBtn();
+        &.none {
+            border: 2px solid #656565;
+            background-color: #3f3f3f;
+            color: #fff;
+        }
+        &.can-harvest {
+            border: 2px solid #de6482;
+            background-color: #ef466f;
+            color: #fff;
+        }
+    }
+}
 .farming {
     &-btn {
         &--light {

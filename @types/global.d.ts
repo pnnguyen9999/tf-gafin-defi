@@ -1,10 +1,11 @@
 import Vue from "vue";
+import { ToastApi } from "vue-toast-notification";
+import { StakeModalApi } from "~/lib/CustomModal/StakeModal";
 
 declare module "vue/types/vue" {
   interface Vue {
-    $stakeModal: {
-      show: (params: any) => void;
-    };
+    $stakeModal: StakeModalApi;
+    $toast: ToastApi;
   }
 }
 

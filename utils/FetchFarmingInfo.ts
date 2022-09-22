@@ -23,6 +23,47 @@ const multicall = new Multicall({
   tryAggregate: false,
 });
 
+/** @newPoolInstance */
+const pool1 = new PoolSingle({
+  _poolId: 1,
+  _tokenInfo: {
+    tokenDeposit: {
+      name: "TOP",
+      ADDRESS: GafinConfig.TOP_ADDRESS,
+      ABI: TOP_SMC_ABI,
+    },
+    tokenReward: {
+      name: "HERA",
+    },
+  },
+});
+const pool2 = new PoolSingle({
+  _poolId: 2,
+  _tokenInfo: {
+    tokenDeposit: {
+      name: "TOP",
+      ADDRESS: GafinConfig.TOP_ADDRESS,
+      ABI: TOP_SMC_ABI,
+    },
+    tokenReward: {
+      name: "HERA",
+    },
+  },
+});
+const pool3 = new PoolSingle({
+  _poolId: 3,
+  _tokenInfo: {
+    tokenDeposit: {
+      name: "TOP",
+      ADDRESS: GafinConfig.TOP_ADDRESS,
+      ABI: TOP_SMC_ABI,
+    },
+    tokenReward: {
+      name: "HERA",
+    },
+  },
+});
+
 const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   const contractCallContext: ContractCallContext[] = [
     {
@@ -75,59 +116,30 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   /**
    * @poolCalculating -----------
    */
-  /** @newPoolInstance */
-  const pool1 = new PoolSingle({
+
+  /** @updateDataRealTime pools*/
+  pool1.updateRealTimeInfo({
     _poolData: INFO_POOL1,
-    _tokenInfo: {
-      tokenDeposit: {
-        name: "TOP",
-        fiatPrice: TOP_PRICE,
-        ADDRESS: GafinConfig.TOP_ADDRESS,
-        ABI: TOP_SMC_ABI,
-      },
-      tokenReward: {
-        name: "HERA",
-        fiatPrice: HERA_PRICE,
-      },
-    },
+    tokenDepositFiat: TOP_PRICE,
+    tokenRewardFiat: HERA_PRICE,
   });
-  const pool2 = new PoolSingle({
+  pool2.updateRealTimeInfo({
     _poolData: INFO_POOL2,
-    _tokenInfo: {
-      tokenDeposit: {
-        name: "TOP",
-        fiatPrice: TOP_PRICE,
-        ADDRESS: GafinConfig.TOP_ADDRESS,
-        ABI: TOP_SMC_ABI,
-      },
-      tokenReward: {
-        name: "HERA",
-        fiatPrice: HERA_PRICE,
-      },
-    },
+    tokenDepositFiat: HERA_PRICE,
+    tokenRewardFiat: TOP_PRICE,
   });
-  const pool3 = new PoolSingle({
+  pool3.updateRealTimeInfo({
     _poolData: INFO_POOL3,
-    _tokenInfo: {
-      tokenDeposit: {
-        name: "TOP",
-        fiatPrice: TOP_PRICE,
-        ADDRESS: GafinConfig.TOP_ADDRESS,
-        ABI: TOP_SMC_ABI,
-      },
-      tokenReward: {
-        name: "HERA",
-        fiatPrice: HERA_PRICE,
-      },
-    },
+    tokenDepositFiat: TOP_PRICE,
+    tokenRewardFiat: HERA_PRICE,
   });
 
-  /** @initializing pool*/
-  pool1.init();
-  pool2.init();
-  pool3.init();
+  /** @initializing pools*/
+  pool1.calculate();
+  pool2.calculate();
+  pool3.calculate();
 
-  /** @loggingInfo */
+  /** @loggingInfo pools*/
   console.log(pool1.APR);
   console.log(pool2.APR);
   console.log(pool3.APR);

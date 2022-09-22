@@ -4,8 +4,14 @@
       <div class="stake-modal-content">
         <div class="mb-auto">
           <div class="stake-modal-header p-3">
-            <div class="title">Stake LP Tokens</div>
-            <img class="icon" src="@/assets/img/close-ico.png" />
+            <div class="title">
+              Stake {{ poolPrototype.tokenInfo.tokenDeposit.name }} Tokens
+            </div>
+            <img
+              class="icon cspt"
+              @click="hide"
+              src="@/assets/img/close-ico.png"
+            />
           </div>
           <div class="border-btm" />
           <div class="p-3">
@@ -14,7 +20,10 @@
                 class="w-100 d-flex align-items-center justify-content-between"
               >
                 <div class="title min">Stake</div>
-                <div class="title min">Balance: 0</div>
+                <div class="title min">
+                  Balance: {{ tokenBalance }}
+                  {{ poolPrototype.tokenInfo.tokenDeposit.name }}
+                </div>
               </div>
               <div
                 class="w-100 mt-2 d-flex align-items-center justify-content-between"
@@ -27,8 +36,19 @@
                   />
                 </div>
                 <div class="d-flex align-items-center">
-                  <div class="max-btn me-2">MAX</div>
-                  <div class="title">TOP-BNB LP</div>
+                  <div
+                    class="max-btn me-2"
+                    @click="
+                      () => {
+                        tokenAmount = tokenBalance;
+                      }
+                    "
+                  >
+                    MAX
+                  </div>
+                  <div class="title">
+                    {{ poolPrototype.tokenInfo.tokenDeposit.name }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -39,7 +59,9 @@
             <div class="btn-cancel" @click="hide">Cancel</div>
             <div class="btn-confirm" @click="confirm">Confirm</div>
           </div>
-          <div class="pb-3 w-100 text-center title min">Get TOP-BNB LP</div>
+          <div class="pb-3 w-100 text-center title min">
+            Get {{ poolPrototype.tokenInfo.tokenDeposit.name }}
+          </div>
         </div>
       </div>
     </div>
@@ -88,6 +110,9 @@
       }
     }
   }
+}
+.cspt {
+  cursor: pointer;
 }
 .v {
   &-enter-active {
@@ -153,18 +178,18 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SinglePool from "~/utils/SinglePool.js";
 import Modal from "./plugin.js";
 export interface StakeModalParams {
   modalTitle: string;
   tokenName: string;
-  tokenBalance: number;
-  onConfirm: () => void;
+  poolPrototype: SinglePool;
 }
 export default Vue.extend({
   data() {
     return {
       visible: false,
-      onConfirm: () => {},
+      poolPrototype: null as unknown as SinglePool,
       modalTitle: "",
       tokenAmount: 0,
       tokenName: "",
@@ -175,20 +200,16 @@ export default Vue.extend({
     hide() {
       this.visible = false;
     },
-    confirm() {
-      if (typeof this.onConfirm === "function") {
-        this.onConfirm();
-        this.hide();
-      } else {
-        this.hide();
-      }
+    async confirm() {
+      await this.poolPrototype.stake(this.tokenAmount);
+      this.tokenBalance = this.poolPrototype.tokenBalance;
     },
     show(params: StakeModalParams) {
       this.visible = true;
       this.modalTitle = params.modalTitle;
       this.tokenName = params.tokenName;
-      this.tokenBalance = params.tokenBalance;
-      this.onConfirm = params.onConfirm;
+      this.tokenBalance = params.poolPrototype.tokenBalance;
+      this.poolPrototype = params.poolPrototype;
       this.tokenAmount = 0;
     },
   },

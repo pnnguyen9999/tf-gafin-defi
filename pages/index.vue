@@ -1,8 +1,10 @@
 <template>
   <div class="defi">
     <div class="container">
-      <Home />
-      <StakeModal />
+      <div class="py-5">
+        <Home />
+        <StakeModal />
+      </div>
     </div>
   </div>
 </template>

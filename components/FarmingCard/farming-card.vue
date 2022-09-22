@@ -13,7 +13,7 @@
       <div class="farming-card-content mb-3">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
-          <div class="">
+          <div class="fnt-bold">
             {{
               `${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
             }}
@@ -25,20 +25,36 @@
         </div>
         <div class="d-flex justify-content-between my-1">
           <div class="">Earn</div>
-          <div class="">12 %</div>
+          <div class="">
+            {{ dataFarmingCard.tokenInfo.tokenReward.name }} + Fee
+          </div>
         </div>
-        <div class="my-1">TOP EARNED</div>
+
+        <div class="d-flex justify-content-between align-items-center my-1">
+          <div>
+            <div class="my-1">
+              {{ dataFarmingCard.tokenInfo.tokenReward.name }} EARNED
+            </div>
+            <div class="harvest-label">{{ dataFarmingCard.harvestAmount }}</div>
+          </div>
+          <div
+            :class="['harvest-btn', canHarvest ? 'can-harvest' : 'none']"
+            @click="canHarvest ? dataFarmingCard.harvest() : () => {}"
+          >
+            Harvest
+          </div>
+        </div>
       </div>
       <div
         class="farming-btn--light"
-        v-show="!gafinCryptoData.web3"
+        v-show="!userAddress"
         @click="handleConnectWallet()"
       >
         Connect Wallet
       </div>
       <div
         class="farming-btn--light"
-        v-show="gafinCryptoData.web3 && !dataFarmingCard?.allowance"
+        v-show="userAddress && !dataFarmingCard?.allowance"
         @click="handleApprove()"
       >
         <div
@@ -48,11 +64,13 @@
         Enable Contract
       </div>
       <div
-        v-show="gafinCryptoData.web3 && dataFarmingCard?.allowance"
+        v-show="userAddress && dataFarmingCard?.allowance"
         class="stake-btn-wrapper"
       >
         <div class="btn-deposit" @click="showModal">Deposit</div>
-        <div class="btn-withdraw">Withdraw</div>
+        <div class="btn-withdraw" @click="dataFarmingCard?.unStake()">
+          Withdraw
+        </div>
       </div>
       <div class="farming-btn--detail" @click="showExpand">
         Detail
@@ -64,7 +82,7 @@
       class="farming-card animate__animated animate__fadeIn"
       v-show="viewType === ViewType.RECTANGLE"
     >
-      <div class="farming-card-content-rectangle">123</div>
+      <div class="farming-card-content-rectangle">RECTANGLE</div>
     </div>
   </div>
 </template>
@@ -76,7 +94,7 @@ import ViewType from "@/constant/UI";
 import GafinCrypto from "@/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
 import PoolSingle from "~/utils/SinglePool";
-import { StakeModalParams } from "~/lib/CustomModal/index.vue";
+import { StakeModalParams } from "~/lib/CustomModal/StakeModal.vue";
 
 export interface IFarmingCard {
   name: string;
@@ -89,7 +107,6 @@ export default Vue.extend({
       type: Object as PropType<PoolSingle>,
     },
   },
-
   data() {
     return {
       isShowExpand: false,
@@ -103,14 +120,29 @@ export default Vue.extend({
     ...mapState("UserInterfaceState", {
       viewType: "viewType",
     }),
+    userAddress(): string {
+      return this.gafinCryptoData.address;
+    },
+    canHarvest(): boolean {
+      if (Number(this.dataFarmingCard.harvestAmount) === 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
-  updated() {},
+  watch: {
+    userAddress(newVal) {
+      console.log(newVal);
+    },
+  },
   methods: {
     showExpand() {
       this.isShowExpand = !this.isShowExpand;
     },
     async handleConnectWallet() {
       await this.gafinCryptoData.connect();
+      await this.dataFarmingCard.initUserInfoInPool();
       EventBus.$emit("checkAllAllowance");
     },
     async handleApprove() {
@@ -121,10 +153,7 @@ export default Vue.extend({
       const params: StakeModalParams = {
         modalTitle: "Stake LP Tokens",
         tokenName: `${this.dataFarmingCard.tokenInfo.tokenDeposit.name} - ${this.dataFarmingCard.tokenInfo.tokenReward.name}`,
-        tokenBalance: Math.random(),
-        onConfirm: () => {
-          return alert("hello");
-        },
+        poolPrototype: this.dataFarmingCard,
       };
       this.$stakeModal.show(params);
     },

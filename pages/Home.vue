@@ -19,7 +19,6 @@ import Tabs from "@/components/Tabs/Tabs.vue";
 import Tab from "@/components/Tabs/Tab.vue";
 import FarmingCard from "@/components/FarmingCard/farming-card.vue";
 import FarmingPanel from "@/components/FarmingPanel.vue";
-import GafinCrypto from "@/utils/GafinCrypto";
 import useFetchFarmingInfo, { FarmingInfoData } from "@/utils/FetchFarmingInfo";
 import Vue from "vue";
 import EventBus from "~/event/EventBus";
@@ -54,7 +53,7 @@ export default Vue.extend({
       this.dataFetchFarmingInfo = await useFetchFarmingInfo();
     };
     fetchingData();
-    this.intervalFetching = setInterval(fetchingData, 2000000);
+    this.intervalFetching = setInterval(fetchingData, 10000);
   },
   destroyed() {
     clearInterval(this.intervalFetching);
