@@ -1,27 +1,29 @@
+import axios from "axios";
 import Vue from "vue";
 import Web3 from "web3";
 import GafinCrypto from "./GafinCrypto";
-interface ITokenInfo {
+export interface ITokenInfo {
   tokenDeposit: {
     name: string;
-    ADDRESS: string;
     ABI: unknown;
     fiatPrice?: any;
+    ADDRESS?: any;
   };
   tokenReward: {
     name: string;
     fiatPrice?: any;
+    ADDRESS?: any;
   };
 }
 /** get stake token balance của pool từ hàm get bên class wallet gafin crypto */
 export default class PoolSingle {
-  private poolId = null as unknown as number;
-  private poolData: any;
-  private poolStartTime = 0;
-  private poolEndTime = 0;
-  private rewardPerSec = 0;
-  private totalReward = 0;
-  private totalDeposit = 0;
+  protected poolId = null as unknown as number;
+  protected poolData: any;
+  protected poolStartTime = 0;
+  protected poolEndTime = 0;
+  protected rewardPerSec = 0;
+  protected totalReward = 0;
+  protected totalDeposit = 0;
   public tokenBalance = 0;
   /**
    * @APR -> chỉ số APR của pool
@@ -29,6 +31,7 @@ export default class PoolSingle {
    * @DEPOSIT_TOKEN_ABI -> trả về ABI JSON của token deposit
    */
   public APR = 0;
+  public liquidity = 0;
   public allowance = false;
   public allowanceLoading = false;
   public harvestAmount = 0;
@@ -43,21 +46,30 @@ export default class PoolSingle {
     tokenReward: {
       name: "",
       fiatPrice: 0,
+      ADDRESS: "",
     },
   };
 
-  public async updateRealTimeInfo({
-    _poolData,
-    tokenDepositFiat,
-    tokenRewardFiat,
-  }: {
-    _poolData: any;
-    tokenDepositFiat: number;
-    tokenRewardFiat: number;
-  }) {
+  public async updateRealTimeInfo({ _poolData }: { _poolData: any }) {
     this.poolData = _poolData;
-    this.tokenInfo.tokenDeposit.fiatPrice = tokenDepositFiat;
-    this.tokenInfo.tokenReward.fiatPrice = tokenRewardFiat;
+    this.tokenInfo.tokenDeposit.ADDRESS = await this.poolData[0];
+    this.tokenInfo.tokenReward.ADDRESS = await this.poolData[1];
+    console.log("abc");
+    /** @getFiatPrice */
+    this.tokenInfo.tokenDeposit.fiatPrice = await axios
+      .get(
+        `https://api.pancakeswap.info/api/v2/tokens/${this.tokenInfo.tokenDeposit.ADDRESS}`
+      )
+      .then((res) => {
+        return res.data.data.price;
+      });
+    this.tokenInfo.tokenReward.fiatPrice = await axios
+      .get(
+        `https://api.pancakeswap.info/api/v2/tokens/${this.tokenInfo.tokenReward.ADDRESS}`
+      )
+      .then((res) => {
+        return res.data.data.price;
+      });
   }
 
   constructor({
@@ -71,7 +83,6 @@ export default class PoolSingle {
     this.tokenInfo = {
       tokenDeposit: {
         name: _tokenInfo.tokenDeposit.name,
-        ADDRESS: _tokenInfo.tokenDeposit.ADDRESS,
         ABI: _tokenInfo.tokenDeposit.ABI,
       },
       tokenReward: {
@@ -106,6 +117,7 @@ export default class PoolSingle {
     this.rewardPerSec = Number(
       Web3.utils.fromWei(this.poolData[4].hex, "ether")
     );
+    console.log(this.poolData);
 
     /** @set totalReward */
     this.totalReward =
@@ -116,6 +128,7 @@ export default class PoolSingle {
       this.totalReward * this.tokenInfo.tokenReward.fiatPrice;
     const TOTAL_DEPOSIT_FIAT =
       this.totalDeposit * this.tokenInfo.tokenDeposit.fiatPrice;
+    this.liquidity = TOTAL_DEPOSIT_FIAT;
 
     /** @calculate APR */
     const TOTAL_DAY = (this.poolEndTime - this.poolStartTime) / 86400;
@@ -159,11 +172,8 @@ export default class PoolSingle {
       callback: async (data: any) => {
         if (data.status === "EXECUTE_STAKE_SUCCESS") {
           Vue.$toast.open("Stake success !");
-          this.allowance = true;
-          this.allowanceLoading = false;
         } else if (data.status === "EXECUTE_STAKE_FAIL") {
           Vue.$toast.error(`Stake failed !`);
-          this.allowanceLoading = false;
         }
       },
     });
@@ -176,11 +186,8 @@ export default class PoolSingle {
       callback: async (data: any) => {
         if (data.status === "EXECUTE_UN_STAKE_SUCCESS") {
           Vue.$toast.open("Withdraw success !");
-          this.allowance = true;
-          this.allowanceLoading = false;
         } else if (data.status === "EXECUTE_UN_STAKE_FAIL") {
           Vue.$toast.error(`Withdraw failed !`);
-          this.allowanceLoading = false;
         }
       },
     });

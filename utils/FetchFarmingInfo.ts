@@ -9,6 +9,7 @@ import {
 } from "ethereum-multicall";
 import axios from "axios";
 import PoolSingle from "./SinglePool";
+import PoolLp from "./LpPool";
 
 export interface FarmingInfoData {
   singlePools: PoolSingle[];
@@ -16,50 +17,35 @@ export interface FarmingInfoData {
 enum PoolNumber {
   POOL1 = 0,
   POOL2 = 1,
-  POOL3 = 2,
 }
 const multicall = new Multicall({
   nodeUrl: GafinConfig.BSC_RPC,
-  tryAggregate: false,
+  tryAggregate: true,
 });
 
 /** @newPoolInstance */
 const pool1 = new PoolSingle({
-  _poolId: 1,
+  _poolId: 5,
   _tokenInfo: {
     tokenDeposit: {
       name: "TOP",
-      ADDRESS: GafinConfig.TOP_ADDRESS,
       ABI: TOP_SMC_ABI,
     },
     tokenReward: {
-      name: "HERA",
+      name: "TOP",
     },
   },
 });
-const pool2 = new PoolSingle({
-  _poolId: 2,
+
+const pool2 = new PoolLp({
+  _poolId: 4,
   _tokenInfo: {
     tokenDeposit: {
-      name: "TOP",
-      ADDRESS: GafinConfig.TOP_ADDRESS,
+      name: "TOP / WBNB",
       ABI: TOP_SMC_ABI,
     },
     tokenReward: {
-      name: "HERA",
-    },
-  },
-});
-const pool3 = new PoolSingle({
-  _poolId: 3,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ADDRESS: GafinConfig.TOP_ADDRESS,
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "HERA",
+      name: "WBNB",
     },
   },
 });
@@ -74,17 +60,12 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
         {
           reference: "getPoolInfo1",
           methodName: "getPoolInfo",
-          methodParameters: [1],
+          methodParameters: [5],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo2",
           methodName: "getPoolInfo",
-          methodParameters: [2],
-        },
-        {
-          reference: "getPoolInfo1",
-          methodName: "getPoolInfo",
-          methodParameters: [3],
+          methodParameters: [4],
         },
       ],
     },
@@ -95,57 +76,32 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   const INFO_POOL1 =
     results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL1]
       .returnValues;
+
   const INFO_POOL2 =
     results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL2]
       .returnValues;
-  const INFO_POOL3 =
-    results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL3]
-      .returnValues;
 
-  /** @getFiatPrice */
-  const HERA_PRICE = await axios
-    .get(GafinConfig.FIAT_CONVERT_HERA_URL)
-    .then((res) => {
-      return res.data.data.price;
-    });
-  const TOP_PRICE = await axios
-    .get(GafinConfig.FIAT_CONVERT_TOP_URL)
-    .then((res) => {
-      return res.data.data.price;
-    });
   /**
    * @poolCalculating -----------
    */
 
   /** @updateDataRealTime pools*/
-  pool1.updateRealTimeInfo({
+  await pool1.updateRealTimeInfo({
     _poolData: INFO_POOL1,
-    tokenDepositFiat: TOP_PRICE,
-    tokenRewardFiat: HERA_PRICE,
   });
-  pool2.updateRealTimeInfo({
+  await pool2.updateRealTimeInfo({
     _poolData: INFO_POOL2,
-    tokenDepositFiat: HERA_PRICE,
-    tokenRewardFiat: TOP_PRICE,
-  });
-  pool3.updateRealTimeInfo({
-    _poolData: INFO_POOL3,
-    tokenDepositFiat: TOP_PRICE,
-    tokenRewardFiat: HERA_PRICE,
   });
 
   /** @initializing pools*/
-  pool1.calculate();
-  pool2.calculate();
-  pool3.calculate();
+  await pool1.calculate();
+  await pool2.calculate();
 
   /** @loggingInfo pools*/
-  console.log(pool1.APR);
-  console.log(pool2.APR);
-  console.log(pool3.APR);
+  console.log({ pool1: pool1.APR, pool2: pool2.APR });
 
   return {
-    singlePools: [pool1, pool2, pool3],
+    singlePools: [pool1, pool2],
   };
 };
 

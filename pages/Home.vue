@@ -53,7 +53,7 @@ export default Vue.extend({
       this.dataFetchFarmingInfo = await useFetchFarmingInfo();
     };
     fetchingData();
-    this.intervalFetching = setInterval(fetchingData, 10000);
+    this.intervalFetching = setInterval(fetchingData, 15000);
   },
   destroyed() {
     clearInterval(this.intervalFetching);

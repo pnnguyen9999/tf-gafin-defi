@@ -11,7 +11,7 @@
       v-show="viewType === ViewType.SQUARE"
     >
       <div class="farming-card-content mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
           <div class="fnt-bold">
             {{
@@ -19,18 +19,22 @@
             }}
           </div>
         </div>
-        <div class="d-flex justify-content-between my-1">
+        <div class="d-flex justify-content-between my-2">
+          <div class="">Liquidity</div>
+          <div class="">$ {{ dataFarmingCard.liquidity.toFixed(2) }}</div>
+        </div>
+        <div class="d-flex justify-content-between my-2">
           <div class="">APR</div>
           <div class="">{{ dataFarmingCard.APR.toFixed(2) }} %</div>
         </div>
-        <div class="d-flex justify-content-between my-1">
+        <div class="d-flex justify-content-between my-2">
           <div class="">Earn</div>
           <div class="">
             {{ dataFarmingCard.tokenInfo.tokenReward.name }} + Fee
           </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center my-1">
+        <div class="d-flex justify-content-between align-items-center my-2">
           <div>
             <div class="my-1">
               {{ dataFarmingCard.tokenInfo.tokenReward.name }} EARNED
