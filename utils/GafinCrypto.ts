@@ -14,7 +14,7 @@ class GafinCryptoClass {
   }
   initInfo = async () => {
     this.web3 = new Web3(window.ethereum);
-    this.address = (await this.web3.eth.getAccounts())[0];
+    this.address = (await this.web3.eth.requestAccounts())[0];
     this.currentBalance = Web3.utils.fromWei(
       `${await this.web3.eth.getBalance(this.address)}`,
       "ether"
