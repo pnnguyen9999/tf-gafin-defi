@@ -1,7 +1,7 @@
 <template>
   <div class="farming-panel">
     <div class="d-flex justify-content-between align-items-center">
-      <div>123</div>
+      <div>Farming Pools</div>
       <div>
         <img
           class="view-icon"
