@@ -56,13 +56,15 @@ export default Vue.extend({
     }),
     dataFetchFarmingInfoLive(): PoolSingle[] {
       const arr = [] as PoolSingle[];
+      const arrEnd = [] as PoolSingle[];
       if (this.dataFetchFarmingInfo.pools) {
         this.dataFetchFarmingInfo.pools.forEach((pool) => {
           console.log(pool.poolEndTimeUnix);
           if (pool.poolEndTimeUnix > Moment().unix()) {
             arr.push(pool);
           } else {
-            this.dataFetchFarmingInfoEnd.push(pool);
+            arrEnd.push(pool);
+            this.dataFetchFarmingInfoEnd = arrEnd;
           }
         });
       }

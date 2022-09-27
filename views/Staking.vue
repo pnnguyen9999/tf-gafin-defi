@@ -56,6 +56,7 @@ export default Vue.extend({
     }),
     dataFetchStakingInfoLive(): PoolStaking[] {
       const arr = [] as PoolStaking[];
+      const arrEnd = [] as PoolStaking[];
       if (this.dataFetchStakingInfo.poolsStaking) {
         console.log("asndjkasndkjasdn");
         this.dataFetchStakingInfo.poolsStaking.forEach((pool) => {
@@ -63,7 +64,8 @@ export default Vue.extend({
           if (pool.poolEndTimeUnix > Moment().unix()) {
             arr.push(pool);
           } else {
-            this.dataFetchStakingInfoEnd.push(pool);
+            arrEnd.push(pool);
+            this.dataFetchStakingInfoEnd = arrEnd;
           }
         });
       }
