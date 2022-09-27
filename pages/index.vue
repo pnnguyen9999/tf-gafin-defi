@@ -2,7 +2,14 @@
   <div class="defi">
     <div class="container">
       <div class="py-5">
-        <Farming />
+        <Tabs>
+          <Tab name="Farming" :selected="true">
+            <Farming />
+          </Tab>
+          <Tab name="Staking">
+            <Staking />
+          </Tab>
+        </Tabs>
         <StakeModal />
       </div>
     </div>
@@ -21,12 +28,15 @@
 <script lang="ts">
 import Vue from "vue";
 import Farming from "@/views/Farming.vue";
+import Staking from "@/views/Staking.vue";
+import Tabs from "@/components/Tabs/Tabs.vue";
+import Tab from "@/components/Tabs/Tab.vue";
 import "bootstrap/scss/bootstrap.scss";
 import "../style/main.scss";
 import "animate.css";
 
 export default Vue.extend({
   name: "IndexPage",
-  components: { Farming },
+  components: { Tabs, Tab, Farming, Staking },
 });
 </script>

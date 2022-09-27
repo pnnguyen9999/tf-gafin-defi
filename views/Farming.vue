@@ -6,6 +6,7 @@
         <FarmingCard
           v-for="(data, index) in dataFetchFarmingInfoLive"
           :dataFarmingCard="data"
+          cardType="farming"
           :key="index"
         />
       </div>
@@ -13,6 +14,7 @@
         <FarmingCard
           v-for="(data, index) in dataFetchFarmingInfoEnd"
           :dataFarmingCard="data"
+          cardType="farming"
           :key="index"
         />
       </div>
@@ -22,8 +24,6 @@
 
 <style lang="scss"></style>
 <script lang="ts">
-import Tabs from "@/components/Tabs/Tabs.vue";
-import Tab from "@/components/Tabs/Tab.vue";
 import FarmingCard from "@/components/FarmingCard/farming-card.vue";
 import FarmingPanel from "@/components/FarmingPanel.vue";
 import useFetchFarmingInfo, { FarmingInfoData } from "@/utils/FetchFarmingInfo";
@@ -36,8 +36,6 @@ import PoolSingle from "~/utils/SinglePool";
 export default Vue.extend({
   name: "Home-DEFI",
   components: {
-    Tabs,
-    Tab,
     FarmingCard,
     FarmingPanel,
   },
@@ -86,7 +84,7 @@ export default Vue.extend({
       this.dataFetchFarmingInfo = await useFetchFarmingInfo();
     };
     fetchingData();
-    this.intervalFetching = setInterval(fetchingData, 15000);
+    this.intervalFetching = setInterval(fetchingData, 30000);
   },
 
   destroyed() {

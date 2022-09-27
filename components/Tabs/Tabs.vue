@@ -23,23 +23,27 @@
 }
 .tabs {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0px;
   a {
     text-decoration: none;
     color: #b5afaa;
+    font-size: 15pt;
+    transition: all 0.5s ease-in-out;
     &:hover {
       color: #fff;
     }
   }
   .tab {
-    padding: 8px 20px;
+    padding: 10px;
     border-radius: 8px;
     @include tabAnimation(200ms);
     &.is-active {
-      background: #fe8e26;
-      color: #fff;
       @include tabAnimation(500ms);
       a {
-        color: #fff;
+        color: #fe8e26;
+        font-family: fontbold;
       }
     }
   }

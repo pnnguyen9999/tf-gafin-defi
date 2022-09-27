@@ -1,15 +1,16 @@
 <template>
   <div
     :class="[
-      { 'col-md-4': viewType === ViewType.SQUARE },
-      { 'col-md-12': viewType === ViewType.RECTANGLE },
+      { 'col-md-4': computedCardType === ViewType.SQUARE },
+      { 'col-md-12': computedCardType === ViewType.RECTANGLE },
       'p-1',
     ]"
   >
     <div
       class="farming-card animate__animated animate__fadeIn"
-      v-show="viewType === ViewType.SQUARE"
+      v-show="computedCardType === ViewType.SQUARE"
     >
+      {{ cardType }}
       <div class="farming-card-content mb-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
@@ -89,7 +90,7 @@
     </div>
     <div
       class="farming-card animate__animated animate__fadeIn"
-      v-show="viewType === ViewType.RECTANGLE"
+      v-show="computedCardType === ViewType.RECTANGLE"
     >
       <div class="farming-card-content-rectangle">
         <div class="row">
@@ -215,12 +216,12 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import { mapState, mapMutations } from "vuex";
-import ViewType from "@/constant/UI";
+import { mapState } from "vuex";
 import GafinCrypto from "@/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
 import PoolSingle from "~/utils/SinglePool";
 import { StakeModalParams } from "~/lib/CustomModal/StakeModal.vue";
+import ViewType from "@/constant/UI";
 
 export interface IFarmingCard {
   name: string;
@@ -232,6 +233,9 @@ export default Vue.extend({
     dataFarmingCard: {
       type: Object as PropType<PoolSingle>,
     },
+    cardType: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -239,6 +243,7 @@ export default Vue.extend({
       isShowExpandRectangle: false,
       maxHeight: "100px",
       ViewType: ViewType,
+      viewState: ViewType.SQUARE,
       gafinCryptoData: GafinCrypto,
       isApproved: false,
     };
@@ -246,7 +251,15 @@ export default Vue.extend({
   computed: {
     ...mapState("UserInterfaceState", {
       viewType: "viewType",
+      viewTypeStaking: "viewTypeStaking",
     }),
+    computedCardType(): ViewType {
+      if (this.cardType === "farming") {
+        return this.viewType;
+      } else {
+        return this.viewTypeStaking;
+      }
+    },
     userAddress(): string {
       return this.gafinCryptoData.address;
     },

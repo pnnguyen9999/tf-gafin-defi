@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import GafinConfig from "@/constant/config/index";
 import FARMING_SMC_ABI from "@/constant/abi/FarmingContract.abi.json";
+import STAKING_SMC_ABI from "@/constant/abi/StakingContract.abi.json";
 import BigNumber from "bignumber.js";
 
 class GafinCryptoClass {
@@ -12,6 +13,7 @@ class GafinCryptoClass {
     this.address = null as unknown as string;
     this.currentBalance = null as unknown as string;
   }
+
   initInfo = async () => {
     this.web3 = new Web3(window.ethereum);
     this.address = (await this.web3.eth.requestAccounts())[0];
@@ -20,6 +22,7 @@ class GafinCryptoClass {
       "ether"
     );
   };
+
   connect = async () => {
     if (window.ethereum) {
       if (window.ethereum.networkVersion !== GafinConfig.CHAIN_ID) {
@@ -61,6 +64,21 @@ class GafinCryptoClass {
     return contractAllowance != 0;
   };
 
+  getAllowanceStaking = async ({
+    SMC_ADDRESS,
+    SMC_ABI,
+  }: {
+    SMC_ADDRESS: string;
+    SMC_ABI: any;
+  }) => {
+    const contract = new this.web3.eth.Contract(SMC_ABI, SMC_ADDRESS);
+    const contractAllowance = await contract.methods
+      .allowance(this.address, GafinConfig.STAKING_CONTRACT_ADDRESS)
+      .call();
+    console.log(contractAllowance != 0);
+    return contractAllowance != 0;
+  };
+
   approveContract = async ({
     SMC_ADDRESS,
     SMC_ABI,
@@ -95,6 +113,40 @@ class GafinCryptoClass {
     return executeApproveResult;
   };
 
+  approveContractStaking = async ({
+    SMC_ADDRESS,
+    SMC_ABI,
+    callback,
+  }: {
+    SMC_ADDRESS: string;
+    SMC_ABI: any;
+    callback: any;
+  }) => {
+    const contract = new this.web3.eth.Contract(SMC_ABI, SMC_ADDRESS);
+    const totalSupply = await contract.methods.totalSupply().call();
+    const executeApproveResult = await contract.methods
+      .approve(GafinConfig.STAKING_CONTRACT_ADDRESS, totalSupply)
+      .send({ from: this.address })
+      .on("transactionHash", (hash: any) => {
+        callback({
+          status: "EXECUTE_APPROVE_SUBMIT",
+          txID: hash,
+        });
+      })
+      .then(async (receipt: any) => {
+        if (receipt.status === true) {
+          callback({
+            status: "EXECUTE_APPROVE_SUCCESS",
+            txID: receipt.transactionHash,
+          });
+        }
+      })
+      .catch((err: any) => {
+        callback({ status: "EXECUTE_APPROVE_FAIL", error: err.message });
+      });
+    return executeApproveResult;
+  };
+
   getTokenBalance = async ({
     SMC_ADDRESS,
     SMC_ABI,
@@ -107,6 +159,18 @@ class GafinCryptoClass {
       await contract.methods.balanceOf(this.address).call()
     );
     return Number(this.web3.utils.fromWei(`${balance.toFixed()}`, "ether"));
+  };
+
+  getHarvestAmountStaking = async ({ poolId }: { poolId: number }) => {
+    const contract = new this.web3.eth.Contract(
+      STAKING_SMC_ABI as any,
+      GafinConfig.STAKING_CONTRACT_ADDRESS
+    );
+    console.log(this.address);
+    const reward = new BigNumber(
+      await contract.methods.getUserDividends(this.address, poolId).call()
+    );
+    return Number(this.web3.utils.fromWei(`${reward.toFixed()}`, "ether"));
   };
 
   getHarvestAmount = async ({ poolId }: { poolId: number }) => {
