@@ -10,7 +10,6 @@
       class="farming-card animate__animated animate__fadeIn"
       v-show="computedCardType === ViewType.SQUARE"
     >
-      {{ cardType }}
       <div class="farming-card-content mb-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <img class="token-img" src="@/assets/img/buni-icon.png" />
