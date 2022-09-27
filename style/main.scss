@@ -1,19 +1,28 @@
 $primary-color: #fe8e26;
 $primary-text-color: #fff;
 @import "./mixins.scss";
+@font-face {
+    font-family: fontreg;
+    src: url("~/assets/fonts/NotoSans-Regular.ttf") format("truetype");
+}
+@font-face {
+    font-family: fontbold;
+    src: url("~/assets/fonts/NotoSans-Bold.ttf") format("truetype");
+}
 body {
     background-color: #000 !important;
+    font-family: fontreg !important;
 }
 .fnt {
     &-bold {
-        font-weight: bold;
+        font-family: fontbold;
     }
 }
 .harvest {
     &-label {
         color: #ef466f;
         font-size: 13pt;
-        font-weight: bold;
+        font-family: fontbold;
     }
     &-btn {
         @include normalBtn();
@@ -73,11 +82,28 @@ body {
             }
         }
     }
-    &-content-rectangle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
+    &-card-content-rectangle {
+        .rectangle-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            .title {
+                color: #acabab;
+            }
+            .content {
+                color: #fff;
+            }
+        }
+        .harvest-container {
+            border: 1px solid #413f3e;
+            padding: 10px;
+            border-radius: 15px;
+        }
+        .start-farming-container {
+            border: 1px solid #413f3e;
+            padding: 12px;
+            border-radius: 15px;
+        }
     }
 }
 

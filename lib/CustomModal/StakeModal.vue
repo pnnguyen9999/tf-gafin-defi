@@ -75,7 +75,7 @@
     @include normalBtn();
     font-size: 11pt;
     background-color: #059872;
-    font-weight: bold;
+    font-family: fontbold;
     width: 80px;
   }
   .token-amount {
@@ -83,7 +83,7 @@
     background-color: #110f0e;
     color: #fff;
     border: 0px;
-    font-weight: bold;
+    font-family: fontbold;
     font-size: 14pt;
   }
   .amount-content {
@@ -93,7 +93,7 @@
     @include flex-column-center();
   }
   .title {
-    font-weight: bold;
+    font-family: fontbold;
     font-size: 14pt;
     &.min {
       font-size: 11pt;

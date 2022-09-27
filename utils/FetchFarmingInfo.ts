@@ -12,7 +12,7 @@ import PoolSingle from "./SinglePool";
 import PoolLp from "./LpPool";
 
 export interface FarmingInfoData {
-  singlePools: PoolSingle[];
+  pools: PoolSingle[];
 }
 enum PoolNumber {
   POOL1 = 0,
@@ -45,7 +45,7 @@ const pool2 = new PoolLp({
       ABI: TOP_SMC_ABI,
     },
     tokenReward: {
-      name: "WBNB",
+      name: "TOP",
     },
   },
 });
@@ -98,10 +98,10 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   await pool2.calculate();
 
   /** @loggingInfo pools*/
-  console.log({ pool1: pool1.APR, pool2: pool2.APR });
+  // console.log({ pool1: pool1.APR, pool2: pool2.APR });
 
   return {
-    singlePools: [pool1, pool2],
+    pools: [pool1, pool2],
   };
 };
 

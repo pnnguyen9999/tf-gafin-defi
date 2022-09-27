@@ -54,7 +54,6 @@ export default class PoolSingle {
     this.poolData = _poolData;
     this.tokenInfo.tokenDeposit.ADDRESS = await this.poolData[0];
     this.tokenInfo.tokenReward.ADDRESS = await this.poolData[1];
-    console.log("abc");
     /** @getFiatPrice */
     this.tokenInfo.tokenDeposit.fiatPrice = await axios
       .get(
@@ -100,7 +99,9 @@ export default class PoolSingle {
 
   public async initUserInfoInPool() {
     if (GafinCrypto.address) {
-      console.log("initialize pool's user info");
+      console.log(
+        `initialize pool's user info - ${this.tokenInfo.tokenDeposit.name}`
+      );
       await this.getTokenBalance();
       this.harvestAmount = Number(
         (await GafinCrypto.getHarvestAmount({ poolId: this.poolId })).toFixed(8)
@@ -117,7 +118,6 @@ export default class PoolSingle {
     this.rewardPerSec = Number(
       Web3.utils.fromWei(this.poolData[4].hex, "ether")
     );
-    console.log(this.poolData);
 
     /** @set totalReward */
     this.totalReward =
@@ -206,5 +206,9 @@ export default class PoolSingle {
       },
     });
     await this.initUserInfoInPool();
+  }
+
+  public get poolEndTimeUnix() {
+    return this.poolEndTime;
   }
 }

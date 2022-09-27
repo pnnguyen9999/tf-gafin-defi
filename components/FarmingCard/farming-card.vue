@@ -25,7 +25,10 @@
         </div>
         <div class="d-flex justify-content-between my-2">
           <div class="">APR</div>
-          <div class="">{{ dataFarmingCard.APR.toFixed(2) }} %</div>
+          <div class="d-flex align-items-center">
+            <div class="me-2">{{ dataFarmingCard.APR.toFixed(2) }} %</div>
+            <img style="width: 22px" src="@/assets/img/apr-ico.png" />
+          </div>
         </div>
         <div class="d-flex justify-content-between my-2">
           <div class="">Earn</div>
@@ -77,16 +80,135 @@
         </div>
       </div>
       <div class="farming-btn--detail" @click="showExpand">
-        Detail
+        {{ !isShowExpand ? "Detail" : "Hide" }}
         <img class="detail-icon" src="@/assets/img/detail-icon.png" />
       </div>
-      <div v-show="isShowExpand" class="farming-card--expand">expanded</div>
+      <div v-show="isShowExpand" class="farming-card--expand">
+        <hr />
+      </div>
     </div>
     <div
       class="farming-card animate__animated animate__fadeIn"
       v-show="viewType === ViewType.RECTANGLE"
     >
-      <div class="farming-card-content-rectangle">RECTANGLE</div>
+      <div class="farming-card-content-rectangle">
+        <div class="row">
+          <div class="col-4">
+            <div class="d-flex align-items-center">
+              <img class="token-img p-1" src="@/assets/img/buni-icon.png" />
+              <div class="fnt-bold ms-2">
+                {{
+                  `${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="rectangle-item">
+              <div class="title">Earned</div>
+              <div class="content">
+                {{ dataFarmingCard.tokenInfo.tokenReward.name }}
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="rectangle-item">
+              <div class="title">APR</div>
+              <div class="content">
+                <div class="d-flex align-items-center">
+                  <div class="me-2">{{ dataFarmingCard.APR.toFixed(2) }} %</div>
+                  <img style="width: 22px" src="@/assets/img/apr-ico.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="rectangle-item">
+              <div class="title">Liquidity</div>
+              <div class="content">
+                $ {{ dataFarmingCard.liquidity.toFixed(2) }}
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="d-flex flex-column align-items-end">
+              <div class="farming-btn--detail" @click="showExpandRectangle">
+                Detail
+                <img class="detail-icon" src="@/assets/img/detail-icon.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="isShowExpandRectangle" class="farming-card--expand">
+          <hr />
+          <div class="col-12">
+            <div class="row">
+              <div class="col-md-4 d-flex align-items-center">
+                <div>
+                  <div>Get TOKEN - BNB LP</div>
+                  <div>View Contract</div>
+                  <div>See Pair Info</div>
+                </div>
+              </div>
+              <div
+                class="col-md-4 harvest-container d-flex justify-content-between align-items-center my-2"
+              >
+                <div>
+                  <div class="my-1">
+                    {{ dataFarmingCard.tokenInfo.tokenReward.name }} EARNED
+                  </div>
+                  <div class="harvest-label">
+                    {{ dataFarmingCard.harvestAmount }}
+                  </div>
+                </div>
+                <div
+                  :class="['harvest-btn', canHarvest ? 'can-harvest' : 'none']"
+                  @click="canHarvest ? dataFarmingCard.harvest() : () => {}"
+                >
+                  Harvest
+                </div>
+              </div>
+              <div class="col-md-4 p-1 d-flex justify-content-end">
+                <div class="col-md-8 col-12">
+                  <div class="start-farming-container">
+                    <div class="mb-2">Start Farming</div>
+                    <div
+                      class="farming-btn--light"
+                      v-show="!userAddress"
+                      @click="handleConnectWallet()"
+                    >
+                      Connect Wallet
+                    </div>
+                    <div
+                      class="farming-btn--light"
+                      v-show="userAddress && !dataFarmingCard?.allowance"
+                      @click="handleApprove()"
+                    >
+                      <div
+                        class="spinner-border spinner-border-sm mx-2"
+                        v-show="dataFarmingCard?.allowanceLoading"
+                      />
+                      Enable Contract
+                    </div>
+                    <div
+                      v-show="userAddress && dataFarmingCard?.allowance"
+                      class="stake-btn-wrapper"
+                    >
+                      <div class="btn-deposit" @click="showModal">Deposit</div>
+                      <div
+                        class="btn-withdraw"
+                        @click="dataFarmingCard?.unStake()"
+                      >
+                        Withdraw
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +236,7 @@ export default Vue.extend({
   data() {
     return {
       isShowExpand: false,
+      isShowExpandRectangle: false,
       maxHeight: "100px",
       ViewType: ViewType,
       gafinCryptoData: GafinCrypto,
@@ -144,14 +267,16 @@ export default Vue.extend({
     showExpand() {
       this.isShowExpand = !this.isShowExpand;
     },
+    showExpandRectangle() {
+      this.isShowExpandRectangle = !this.isShowExpandRectangle;
+    },
     async handleConnectWallet() {
       await this.gafinCryptoData.connect();
-      await this.dataFarmingCard.initUserInfoInPool();
-      EventBus.$emit("checkAllAllowance");
+      EventBus.$emit("userWalletConnected");
     },
     async handleApprove() {
       await this.dataFarmingCard.setAllowance();
-      EventBus.$emit("checkAllAllowance");
+      EventBus.$emit("userWalletConnected");
     },
     showModal() {
       const params: StakeModalParams = {

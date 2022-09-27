@@ -27,8 +27,6 @@ export default class PoolLp extends PoolSingle {
     this.tokenInfo.tokenDeposit.ADDRESS = await this.poolData[0];
     this.tokenInfo.tokenReward.ADDRESS = await this.poolData[1];
 
-    console.log("xyz");
-
     /** @getEachTokenInContract contractToken0 contractToken1 */
     const web3 = new Web3(GafinConfig.BSC_RPC);
     let contractLP = new web3.eth.Contract(

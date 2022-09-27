@@ -2,7 +2,7 @@
   <div class="defi">
     <div class="container">
       <div class="py-5">
-        <Home />
+        <Farming />
         <StakeModal />
       </div>
     </div>
@@ -20,13 +20,13 @@
 </style>
 <script lang="ts">
 import Vue from "vue";
-import Home from "@/pages/Home.vue";
+import Farming from "@/views/Farming.vue";
 import "bootstrap/scss/bootstrap.scss";
 import "../style/main.scss";
 import "animate.css";
 
 export default Vue.extend({
   name: "IndexPage",
-  components: { Home },
+  components: { Farming },
 });
 </script>

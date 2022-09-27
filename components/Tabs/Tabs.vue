@@ -25,18 +25,22 @@
   display: flex;
   a {
     text-decoration: none;
-    color: #000;
+    color: #b5afaa;
     &:hover {
-      color: #000;
+      color: #fff;
     }
   }
   .tab {
-    padding: 8px;
+    padding: 8px 20px;
     border-radius: 8px;
     @include tabAnimation(200ms);
     &.is-active {
       background: #fe8e26;
+      color: #fff;
       @include tabAnimation(500ms);
+      a {
+        color: #fff;
+      }
     }
   }
 }
