@@ -34,6 +34,9 @@
                     class="token-amount"
                     placeholder="amount..."
                   />
+                  <div class="error" v-if="invalidIndicator.status">
+                    {{ invalidIndicator.message }}
+                  </div>
                 </div>
                 <div class="d-flex align-items-center">
                   <div
@@ -70,6 +73,11 @@
 
 <style lang="scss" scoped>
 @import "@/style/mixins.scss";
+.error {
+  color: #ef466f;
+  font-size: 10pt;
+  margin-top: 5px;
+}
 .stake-modal-wrapper {
   .max-btn {
     @include normalBtn();
@@ -135,11 +143,12 @@
   flex-direction: column;
   position: relative;
   width: 420px;
-  // height: 250px;
+  // height: fit-content;
   background-color: #110f0e;
   margin-bottom: 10%;
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  // transition: all 0.5s ease-in-out;
 }
 .stake-modal-wrapper {
   position: fixed;
@@ -194,6 +203,10 @@ export default Vue.extend({
       tokenAmount: 0,
       tokenName: "",
       tokenBalance: 0,
+      invalidIndicator: {
+        status: false,
+        message: "",
+      },
     };
   },
   methods: {
@@ -210,7 +223,32 @@ export default Vue.extend({
       this.tokenName = params.tokenName;
       this.tokenBalance = params.poolPrototype.tokenBalance;
       this.poolPrototype = params.poolPrototype;
-      this.tokenAmount = 0;
+      this.tokenAmount = null as unknown as number;
+    },
+    isNumeric(value: any) {
+      return /^-?\d+$/.test(value);
+    },
+  },
+  watch: {
+    tokenAmount(newVal) {
+      if (this.isNumeric(newVal)) {
+        if (Number(newVal) > this.tokenBalance || this.tokenBalance === 0) {
+          this.invalidIndicator = {
+            status: true,
+            message: "Insufficient funds",
+          };
+        } else {
+          this.invalidIndicator = {
+            status: false,
+            message: "",
+          };
+        }
+      } else {
+        this.invalidIndicator = {
+          status: true,
+          message: "Please input a number",
+        };
+      }
     },
   },
   beforeMount() {

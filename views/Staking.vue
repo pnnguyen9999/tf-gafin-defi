@@ -58,7 +58,6 @@ export default Vue.extend({
       const arr = [] as PoolStaking[];
       const arrEnd = [] as PoolStaking[];
       if (this.dataFetchStakingInfo.poolsStaking) {
-        console.log("asndjkasndkjasdn");
         this.dataFetchStakingInfo.poolsStaking.forEach((pool) => {
           console.log(pool.poolEndTimeUnix);
           if (pool.poolEndTimeUnix > Moment().unix()) {
