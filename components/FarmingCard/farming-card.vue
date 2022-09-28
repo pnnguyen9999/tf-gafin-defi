@@ -7,7 +7,7 @@
     ]"
   >
     <div
-      class="farming-card animate__animated animate__fadeIn"
+      class="farming-card animate__animated animate__fadeInRight"
       v-show="computedCardType === ViewType.SQUARE"
     >
       <div class="farming-card-content mb-3">
@@ -74,7 +74,14 @@
         v-show="userAddress && dataFarmingCard?.allowance"
         class="stake-btn-wrapper"
       >
-        <div class="btn-deposit" @click="showModal">Deposit</div>
+        <div
+          v-if="dataFarmingCard.isLive()"
+          class="btn-deposit"
+          @click="showModal"
+        >
+          Deposit
+        </div>
+        <div v-else class="btn-deposit grey">Deposit</div>
         <div class="btn-withdraw" @click="dataFarmingCard?.unStake()">
           Withdraw
         </div>
@@ -194,7 +201,14 @@
                       v-show="userAddress && dataFarmingCard?.allowance"
                       class="stake-btn-wrapper"
                     >
-                      <div class="btn-deposit" @click="showModal">Deposit</div>
+                      <div
+                        v-if="dataFarmingCard.isLive()"
+                        class="btn-deposit"
+                        @click="showModal"
+                      >
+                        Deposit
+                      </div>
+                      <div v-else class="btn-deposit grey">Deposit</div>
                       <div
                         class="btn-withdraw"
                         @click="dataFarmingCard?.unStake()"

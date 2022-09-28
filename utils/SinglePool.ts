@@ -2,6 +2,7 @@ import axios from "axios";
 import Vue from "vue";
 import Web3 from "web3";
 import GafinCrypto from "./GafinCrypto";
+import Moment from "moment";
 export interface ITokenInfo {
   tokenDeposit: {
     name: string;
@@ -210,5 +211,9 @@ export default class PoolSingle {
 
   public get poolEndTimeUnix() {
     return this.poolEndTime;
+  }
+
+  public isLive() {
+    return this.poolEndTime > Moment().unix();
   }
 }

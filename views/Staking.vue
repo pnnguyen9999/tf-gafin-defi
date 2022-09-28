@@ -60,7 +60,7 @@ export default Vue.extend({
       if (this.dataFetchStakingInfo.poolsStaking) {
         this.dataFetchStakingInfo.poolsStaking.forEach((pool) => {
           console.log(pool.poolEndTimeUnix);
-          if (pool.poolEndTimeUnix > Moment().unix()) {
+          if (pool.isLive()) {
             arr.push(pool);
           } else {
             arrEnd.push(pool);

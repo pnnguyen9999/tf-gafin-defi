@@ -187,13 +187,17 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState } from "vuex";
 import SinglePool from "~/utils/SinglePool.js";
 import Modal from "./plugin.js";
+import { ViewMode } from "~/store/UserInterfaceState";
+
 export interface StakeModalParams {
   modalTitle: string;
   tokenName: string;
   poolPrototype: SinglePool;
 }
+
 export default Vue.extend({
   data() {
     return {
@@ -208,6 +212,11 @@ export default Vue.extend({
         message: "",
       },
     };
+  },
+  computed: {
+    ...mapState("UserInterfaceState", {
+      currentViewMode: "currentViewMode",
+    }),
   },
   methods: {
     hide() {

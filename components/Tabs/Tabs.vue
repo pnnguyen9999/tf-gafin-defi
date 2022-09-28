@@ -50,12 +50,16 @@
 }
 </style>
 
-<script>
-export default {
+<script lang="ts">
+import { mapMutations } from "vuex";
+import Vue from "vue";
+import { ViewMode } from "~/store/UserInterfaceState";
+
+export default Vue.extend({
   name: "tabs",
   data() {
     return {
-      tabs: [],
+      tabs: [] as any,
     };
   },
   created() {
@@ -63,11 +67,19 @@ export default {
     console.log(this.$children);
   },
   methods: {
-    selectTab(selectedTab) {
-      this.tabs.forEach((tab) => {
+    ...mapMutations({
+      switchViewMode: "UserInterfaceState/switchViewMode",
+    }),
+    selectTab(selectedTab: any) {
+      this.tabs.forEach((tab: any) => {
         tab.isActive = tab.name == selectedTab.name;
       });
+      if (selectedTab.name === "Farming") {
+        this.switchViewMode(ViewMode.FARMING);
+      } else if (selectedTab.name === "Staking") {
+        this.switchViewMode(ViewMode.STAKING);
+      }
     },
   },
-};
+});
 </script>

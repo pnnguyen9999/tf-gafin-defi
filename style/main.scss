@@ -75,6 +75,11 @@ body {
                 background-color: #201a0b;
                 border: 1px solid #fe8e26;
                 color: #fe8e26;
+                &.grey {
+                    border: 1px solid #656565;
+                    background-color: #3f3f3f;
+                    color: #fff;
+                }
             }
             .btn-withdraw {
                 width: 48%;
@@ -118,4 +123,166 @@ body {
     100% {
         opacity: 1;
     }
+}
+
+.menu-panel {
+    $menu-height: 80px;
+    position: fixed;
+    background-color: rgba(20, 20, 20, 0.8);
+    width: 115px;
+    height: 100vh;
+    z-index: 11;
+    overflow-y: hidden;
+    @include sm {
+        width: 100%;
+        height: auto;
+    }
+    .logo {
+        width: 85px;
+        margin-top: 10px;
+    }
+    &--glow-item {
+        position: relative;
+        width: 100%;
+        height: $menu-height;
+        .line {
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+            position: absolute;
+            width: 4px;
+            height: $menu-height;
+            background-color: #fef9f3;
+            z-index: 10;
+            border-radius: 5px;
+        }
+        &:hover,
+        &.active {
+            .menu-panel--item {
+                background-color: rgba(50, 50, 50, 0.6);
+                transform: translateX(5px);
+            }
+            .line {
+                opacity: 1;
+                box-shadow: 0px 0px 10px 3px #d26a00;
+            }
+        }
+    }
+    &--item {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        padding: 10px 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: $menu-height;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        &-icon {
+            width: 30px;
+        }
+        &-text {
+            color: #b0b5c4;
+            font-size: 8pt;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        &:hover,
+        &.active {
+            .menu-panel--item-text {
+                background: linear-gradient(80deg, #feff00, #ff5b00);
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .menu-panel--item-icon {
+                &[data-index="nft"] {
+                    content: url("@/assets/img/menu-panel/nft-g.png");
+                }
+                &[data-index="coins"] {
+                    content: url("@/assets/img/menu-panel/coins-g.png");
+                }
+                &[data-index="blog"] {
+                    content: url("@/assets/img/menu-panel/blog-g.png");
+                }
+                &[data-index="guild"] {
+                    content: url("@/assets/img/menu-panel/guild-g.png");
+                }
+                &[data-index="exchange"] {
+                    content: url("@/assets/img/menu-panel/exchange-g.png");
+                }
+                &[data-index="launchpad"] {
+                    content: url("@/assets/img/menu-panel/launchpad-g.png");
+                }
+            }
+        }
+    }
+    &-pc {
+        @include sm {
+            display: none !important;
+        }
+    }
+    &-mobile {
+        display: none !important;
+        padding: 10px 10px;
+        @include sm {
+            display: block !important;
+            background-color: rgba(20, 20, 20, 0.8);
+        }
+        .logo {
+            width: 150px;
+            height: 50px;
+            margin: 0;
+        }
+        &-search-btn {
+            border-radius: 50%;
+            border: 1px solid #fff !important;
+            padding: 4px 8px;
+            font-size: 10pt;
+        }
+        &-bar-btn {
+            font-size: 15pt;
+        }
+        &-search-btn,
+        &-bar-btn {
+            background-color: transparent;
+            color: #fff;
+            outline: none;
+            border: none;
+            // font-size: 10pt;
+            margin: 0 5px;
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+}
+.language-switcher {
+    background-color: rgba(80, 80, 80, 0.5);
+    padding: 5px;
+    border-radius: 8px;
+    @include sm {
+        width: 100px !important;
+    }
+    .cspt {
+        cursor: pointer;
+    }
+    img {
+        width: 80%;
+    }
+}
+.login-btn {
+    @include normalBtn();
+    border: 1px solid #ff8800;
+    border-radius: 8px;
+    color: #ff8800;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    line-height: 15pt;
+    font-size: 10pt;
+    cursor: pointer;
 }
