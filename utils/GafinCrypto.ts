@@ -219,6 +219,50 @@ class GafinCryptoClass {
     return executeResult;
   };
 
+  investStaking = async ({
+    poolId,
+    amount,
+    callback,
+  }: {
+    poolId: number;
+    amount: any;
+    callback: any;
+  }) => {
+    console.log({ poolId, amount });
+    const contract = new this.web3.eth.Contract(
+      STAKING_SMC_ABI as any,
+      GafinConfig.STAKING_CONTRACT_ADDRESS
+    );
+    const executeResult = await contract.methods
+      .invest(poolId, this.web3.utils.toWei(amount.toString(), "ether"))
+      .send({
+        from: this.address,
+      })
+      .on("transactionHash", (hash: any) => {
+        console.log("transactionHash", hash);
+        callback({
+          status: "EXECUTE_STAKE_SUBMIT",
+          txID: hash,
+        });
+        console.log("transactionHash EXECUTE_STAKE_SUBMIT", hash);
+      })
+      .then((receipt: any) => {
+        console.log("receipt", receipt);
+        if (receipt.status === true) {
+          callback({
+            status: "EXECUTE_STAKE_SUCCESS",
+            txID: receipt.transactionHash,
+            gasUsed: receipt.gasUsed,
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+        callback({ status: "EXECUTE_STAKE_FAIL", error: err.message });
+      });
+    return executeResult;
+  };
+
   stake = async ({
     poolId,
     amount,

@@ -5,7 +5,6 @@ import PoolSingle, { ITokenInfo } from "./SinglePool";
 import LP_ABI from "@/constant/abi/LpContract.abi.json";
 import GafinCrypto from "./GafinCrypto";
 import Vue from "vue";
-
 export default class PoolStaking extends PoolSingle {
   constructor({
     _poolId,
@@ -76,6 +75,21 @@ export default class PoolStaking extends PoolSingle {
         } else if (data.status === "EXECUTE_APPROVE_FAIL") {
           Vue.$toast.error(`Approve token failed !`);
           this.allowanceLoading = false;
+        }
+      },
+    });
+    await this.initUserInfoInPool();
+  }
+
+  public async stake(amount: number) {
+    await GafinCrypto.investStaking({
+      poolId: this.poolId,
+      amount,
+      callback: async (data: any) => {
+        if (data.status === "EXECUTE_STAKE_SUCCESS") {
+          Vue.$toast.open("Stake success !");
+        } else if (data.status === "EXECUTE_STAKE_FAIL") {
+          Vue.$toast.error(`Stake failed !`);
         }
       },
     });
