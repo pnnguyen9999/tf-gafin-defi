@@ -12,6 +12,9 @@ $primary-text-color: #fff;
 body {
     background-color: #000 !important;
     font-family: fontreg !important;
+    background-image: url("~/assets/bg-1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 .fnt {
     &-bold {

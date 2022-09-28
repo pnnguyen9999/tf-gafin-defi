@@ -226,7 +226,7 @@ export default Vue.extend({
       this.tokenAmount = null as unknown as number;
     },
     isNumeric(value: any) {
-      return /^-?\d+$/.test(value);
+      return /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/.test(value);
     },
   },
   watch: {

@@ -17,10 +17,6 @@
 </template>
 <style lang="scss">
 .defi {
-  background-image: url("~/assets/bg-1.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: #000;
   color: #fff;
   height: 100vh;
 }

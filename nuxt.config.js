@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'gafin-defi',
+    title: 'GAFIN DEFI',
     htmlAttrs: {
       lang: 'en'
     },

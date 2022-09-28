@@ -168,7 +168,9 @@ class GafinCryptoClass {
     );
     console.log(this.address);
     const reward = new BigNumber(
-      await contract.methods.getUserDividends(this.address, poolId).call()
+      await contract.methods
+        .getUserDividendsHarvest(this.address, poolId)
+        .call()
     );
     return Number(this.web3.utils.fromWei(`${reward.toFixed()}`, "ether"));
   };
