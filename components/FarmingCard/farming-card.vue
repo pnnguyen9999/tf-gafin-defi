@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      { 'col-md-4': computedCardType === ViewType.SQUARE },
+      { 'col-md-4 col-sm-6': computedCardType === ViewType.SQUARE },
       { 'col-md-12': computedCardType === ViewType.RECTANGLE },
       'p-1',
     ]"

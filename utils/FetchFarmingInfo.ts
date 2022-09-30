@@ -2,8 +2,7 @@ import Web3 from "web3";
 import GafinConfig from "@/constant/config/index";
 import FARMING_SMC_ABI from "@/constant/abi/FarmingContract.abi.json";
 import STAKING_SMC_ABI from "@/constant/abi/StakingContract.abi.json";
-import TOP_SMC_ABI from "@/constant/abi/TopContract.abi.json";
-import LP_ABI from "@/constant/abi/LpContract.abi.json";
+
 import {
   Multicall,
   ContractCallResults,
@@ -13,7 +12,22 @@ import axios from "axios";
 import PoolSingle from "./SinglePool";
 import PoolLp from "./LpPool";
 import PoolStaking from "./StakingPool";
-
+import Vue from "vue";
+import EventBus from "~/event/EventBus";
+import {
+  pool1,
+  pool2,
+  pool3,
+  pool4,
+  pool1Staking,
+  pool2Staking,
+  pool3Staking,
+  pool4Staking,
+  pool5Staking,
+  pool6Staking,
+  pool7Staking,
+  pool8Staking,
+} from "~/pools/pools";
 export interface FarmingInfoData {
   pools: PoolSingle[];
   poolsStaking: PoolStaking[];
@@ -25,124 +39,6 @@ enum PoolNumber {
 const multicall = new Multicall({
   nodeUrl: GafinConfig.BSC_RPC,
   tryAggregate: true,
-});
-
-/** @newPoolInstance */
-const pool1 = new PoolSingle({
-  _poolId: 5,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool2 = new PoolLp({
-  _poolId: 4,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP / WBNB",
-      ABI: LP_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool1Staking = new PoolStaking({
-  _poolId: 0,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool2Staking = new PoolStaking({
-  _poolId: 1,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool3Staking = new PoolStaking({
-  _poolId: 2,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool4Staking = new PoolStaking({
-  _poolId: 3,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool5Staking = new PoolStaking({
-  _poolId: 4,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool6Staking = new PoolStaking({
-  _poolId: 5,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
-});
-
-const pool7Staking = new PoolStaking({
-  _poolId: 6,
-  _tokenInfo: {
-    tokenDeposit: {
-      name: "TOP",
-      ABI: TOP_SMC_ABI,
-    },
-    tokenReward: {
-      name: "TOP",
-    },
-  },
 });
 
 const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
@@ -162,6 +58,16 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
           methodName: "getPoolInfo",
           methodParameters: [4],
         },
+        {
+          reference: "getPoolInfo3",
+          methodName: "getPoolInfo",
+          methodParameters: [6],
+        },
+        {
+          reference: "getPoolInfo4",
+          methodName: "getPoolInfo",
+          methodParameters: [7],
+        },
       ],
     },
     {
@@ -175,34 +81,39 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
           methodParameters: [0],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo2",
           methodName: "getPoolInfo",
           methodParameters: [1],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo3",
           methodName: "getPoolInfo",
           methodParameters: [2],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo4",
           methodName: "getPoolInfo",
           methodParameters: [3],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo5",
           methodName: "getPoolInfo",
           methodParameters: [4],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo6",
           methodName: "getPoolInfo",
           methodParameters: [5],
         },
         {
-          reference: "getPoolInfo1",
+          reference: "getPoolInfo7",
           methodName: "getPoolInfo",
           methodParameters: [6],
+        },
+        {
+          reference: "getPoolInfo8",
+          methodName: "getPoolInfo",
+          methodParameters: [7],
         },
       ],
     },
@@ -219,6 +130,12 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     results.results.SMC_CONTRACT.callsReturnContext[PoolNumber.POOL2]
       .returnValues;
 
+  const INFO_POOL3 =
+    results.results.SMC_CONTRACT.callsReturnContext[2].returnValues;
+
+  const INFO_POOL4 =
+    results.results.SMC_CONTRACT.callsReturnContext[3].returnValues;
+
   const INFO_POOL1_STAKING =
     results.results.SMC_CONTRACT_STAKING.callsReturnContext[0].returnValues;
   const INFO_POOL2_STAKING =
@@ -233,6 +150,8 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
     results.results.SMC_CONTRACT_STAKING.callsReturnContext[5].returnValues;
   const INFO_POOL7_STAKING =
     results.results.SMC_CONTRACT_STAKING.callsReturnContext[6].returnValues;
+  const INFO_POOL8_STAKING =
+    results.results.SMC_CONTRACT_STAKING.callsReturnContext[7].returnValues;
   /**
    * @poolCalculating -----------
    */
@@ -243,6 +162,12 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   });
   await pool2.updateRealTimeInfo({
     _poolData: INFO_POOL2,
+  });
+  await pool3.updateRealTimeInfo({
+    _poolData: INFO_POOL3,
+  });
+  await pool4.updateRealTimeInfo({
+    _poolData: INFO_POOL4,
   });
   await pool1Staking.updateRealTimeInfo({
     _poolData: INFO_POOL1_STAKING,
@@ -265,10 +190,15 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   await pool7Staking.updateRealTimeInfo({
     _poolData: INFO_POOL7_STAKING,
   });
+  await pool8Staking.updateRealTimeInfo({
+    _poolData: INFO_POOL8_STAKING,
+  });
 
   /** @initializing pools*/
   await pool1.calculate();
   await pool2.calculate();
+  await pool3.calculate();
+  await pool4.calculate();
   await pool1Staking.calculate();
   await pool2Staking.calculate();
   await pool3Staking.calculate();
@@ -276,12 +206,15 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   await pool5Staking.calculate();
   await pool6Staking.calculate();
   await pool7Staking.calculate();
+  await pool8Staking.calculate();
 
   /** @loggingInfo pools*/
   // console.log({ pool1: pool1.APR, pool2: pool2.APR });
 
+  EventBus.$emit("fetching-completed");
+
   return {
-    pools: [pool1, pool2],
+    pools: [pool1, pool2, pool3, pool4],
     poolsStaking: [
       pool1Staking,
       pool2Staking,
@@ -290,6 +223,7 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
       pool5Staking,
       pool6Staking,
       pool7Staking,
+      pool8Staking,
     ],
   };
 };

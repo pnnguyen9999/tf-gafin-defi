@@ -8,12 +8,15 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'description', name: 'description', content: 'Welcome to Gafin Defi' },
+      { name: 'format-detection', content: 'telephone=no' },
+      { name: 'og:image', content: '/thumbnail.jpg' },
+      { name: 'og:image:alt', content: 'Welcome to Gafin Defi' },
+      { name: 'og:description', content: 'Welcome to Gafin Defi' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+      { rel: 'icon', type: 'image/x-icon', href: '/fav.ico' }
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -24,6 +27,7 @@ export default {
   plugins: [
     '~plugins/CustomModal.plugin.js',
     '~plugins/Toast.plugin.ts',
+    { src: "~/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

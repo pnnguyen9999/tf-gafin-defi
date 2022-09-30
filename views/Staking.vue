@@ -1,7 +1,8 @@
 <template>
   <div>
     <StakingPanel />
-    <div class="col-12">
+    <Loading v-if="!isFetchingCompleted" />
+    <div v-else class="col-12">
       <div v-if="isLiveStaking" class="row">
         <FarmingCard
           v-for="(data, index) in dataFetchStakingInfoLive"
@@ -9,6 +10,9 @@
           cardType="staking"
           :key="index"
         />
+        <div v-if="dataFetchStakingInfoLive.length === 0">
+          <EmptyAnim />
+        </div>
       </div>
       <div v-else class="row">
         <FarmingCard
@@ -32,12 +36,16 @@ import { mapState } from "vuex";
 import Moment from "moment";
 import PoolStaking from "~/utils/StakingPool";
 import StakingPanel from "~/components/StakingPanel.vue";
+import EmptyAnim from "~/components/Stuff/EmptyAnim.vue";
+import Loading from "~/components/Stuff/Loading.vue";
 
 export default Vue.extend({
   name: "Home-DEFI",
   components: {
     FarmingCard,
     StakingPanel,
+    EmptyAnim,
+    Loading,
   },
   props: {},
   data() {
@@ -53,6 +61,9 @@ export default Vue.extend({
   computed: {
     ...mapState("UserInterfaceState", {
       isLiveStaking: "isLiveStaking",
+    }),
+    ...mapState("FetchingState", {
+      isFetchingCompleted: "isCompleted",
     }),
     dataFetchStakingInfoLive(): PoolStaking[] {
       const arr = [] as PoolStaking[];

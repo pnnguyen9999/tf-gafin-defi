@@ -1,8 +1,8 @@
 <template>
   <div class="defi">
     <MenuPanel />
-    <div class="container ps-md-5 ps-2">
-      <div class="py-5">
+    <div class="container main-ctn">
+      <div class="pt-5">
         <Header />
         <Tabs>
           <Tab name="Farming" :selected="true">
@@ -12,6 +12,7 @@
             <Staking />
           </Tab>
         </Tabs>
+        <Footer />
         <StakeModal />
       </div>
     </div>
@@ -29,14 +30,36 @@ import Farming from "@/views/Farming.vue";
 import Staking from "@/views/Staking.vue";
 import MenuPanel from "~/components/MenuPanel/MenuPanel.vue";
 import Header from "~/components/Header/Header.vue";
+import Footer from "~/components/Footer/Footer.vue";
 import Tabs from "@/components/Tabs/Tabs.vue";
 import Tab from "@/components/Tabs/Tab.vue";
 import "bootstrap/scss/bootstrap.scss";
 import "../style/main.scss";
 import "animate.css";
+import EventBus from "~/event/EventBus";
+import { mapMutations, mapState } from "vuex";
 
 export default Vue.extend({
   name: "IndexPage",
-  components: { Tabs, Tab, Farming, Staking, MenuPanel, Header },
+  components: { Tabs, Tab, Farming, Staking, MenuPanel, Header, Footer },
+  created() {
+    EventBus.$on("fetching-completed", this.setCompleteStatusState.bind(this));
+  },
+  computed: {
+    ...mapState("FetchingState", {
+      isFetchingCompleted: "isCompleted",
+    }),
+  },
+  methods: {
+    ...mapMutations({
+      setCompleteStatus: "FetchingState/setCompleteStatus",
+    }),
+    setCompleteStatusState() {
+      if (!this.isFetchingCompleted) {
+        this.setCompleteStatus(true);
+        this.$toast.open("All data has been loaded");
+      }
+    },
+  },
 });
 </script>

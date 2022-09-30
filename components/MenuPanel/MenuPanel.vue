@@ -8,32 +8,41 @@
           <img class="logo cs-pt" src="@/assets/img/gafin-logo.png" />
         </a>
         <div class="p-3" />
-        <div
-          v-for="(MenuProps, index) in MenuData"
-          :key="index"
-          :class="[
-            'menu-panel--glow-item mb-2',
-            MenuProps.name === 'EARNING' && 'active',
-          ]"
-        >
-          <div class="line" />
-          <div
-            class="menu-panel--item"
-            :class="[
-              'menu-panel--item',
-              MenuProps.name === 'EARNING' && 'active',
-            ]"
-          >
-            <img
-              class="menu-panel--item-icon"
-              :data-index="MenuProps.imgUrl"
-              :src="require(`@/assets/img/menu-panel/${MenuProps.imgUrl}.png`)"
-            />
-            <div class="menu-panel--item-text">{{ MenuProps.name }}</div>
+        <div class="menu-items">
+          <div v-for="(MenuProps, index) in MenuData" :key="index">
+            <a
+              :href="MenuProps.url"
+              :target="MenuProps.openInBlank ? '_blank' : '_self'"
+            >
+              <div
+                :class="[
+                  'menu-panel--glow-item mb-2',
+                  MenuProps.name === 'EARNING' && 'active',
+                ]"
+              >
+                <div class="line" />
+                <div
+                  class="menu-panel--item"
+                  :class="[
+                    'menu-panel--item',
+                    MenuProps.name === 'EARNING' && 'active',
+                  ]"
+                >
+                  <img
+                    class="menu-panel--item-icon"
+                    :data-index="MenuProps.imgUrl"
+                    :src="
+                      require(`@/assets/img/menu-panel/${MenuProps.imgUrl}.png`)
+                    "
+                  />
+                  <div class="menu-panel--item-text">{{ MenuProps.name }}</div>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
-      <div class="w-100 p-2 mb-2">
+      <div class="w-100 p-2 mb-2 pannel-bottom">
         <div
           class="login-btn mb-2"
           v-if="!userAddress"
@@ -62,11 +71,13 @@
 import Vue from "vue";
 import GafinCrypto from "~/utils/GafinCrypto";
 import EventBus from "~/event/EventBus";
+import { mapState } from "vuex";
 
 interface IMenuData {
   imgUrl: string;
   name: string;
   url?: string;
+  openInBlank: boolean;
 }
 export default Vue.extend({
   data() {
@@ -77,47 +88,76 @@ export default Vue.extend({
           imgUrl: "nft",
           name: "NFT MARKETPLACE",
           url: "#",
+          openInBlank: false,
         },
         {
           imgUrl: "coins",
           name: "EARNING",
           url: "#",
+          openInBlank: false,
         },
         {
           imgUrl: "blog",
           name: "BLOG",
-          url: "/blog",
+          url: "https://gafin.io/blog",
+          openInBlank: true,
         },
         {
           imgUrl: "guild",
           name: "GUILD CORE",
           url: "#",
+          openInBlank: false,
         },
         {
           imgUrl: "exchange",
           name: "EXCHANGE",
           url: "#",
+          openInBlank: false,
         },
         {
           imgUrl: "launchpad",
           name: "LAUNCHPAD",
           url: "#",
+          openInBlank: false,
+        },
+        {
+          imgUrl: "gamification",
+          name: "GAMIFICATION",
+          url: "https://gamification.gafin.io/",
+          openInBlank: true,
         },
       ] as IMenuData[],
     };
   },
   methods: {
     async handleConnectWallet() {
-      await this.gafinCryptoData.connect();
-      EventBus.$emit("userWalletConnected");
+      if (this.isFetchingCompleted) {
+        await this.gafinCryptoData.connect();
+        EventBus.$emit("userWalletConnected");
+      } else {
+        this.$toast.warning("Please waiting for application loading...");
+      }
     },
   },
   computed: {
     userAddress(): string {
       return this.gafinCryptoData.address;
     },
+    ...mapState("FetchingState", {
+      isFetchingCompleted: "isCompleted",
+    }),
   },
 });
 </script>
 
-<style></style>
+<style>
+.pannel-bottom {
+  position: absolute;
+  bottom: 0;
+}
+.menu-items {
+  max-height: calc(100vh - 115px - 150px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+</style>

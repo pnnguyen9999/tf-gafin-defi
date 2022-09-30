@@ -124,12 +124,17 @@ body {
         opacity: 1;
     }
 }
-
+.main-ctn {
+    padding-left: 100px;
+    @include sm {
+        padding-left: 12px;
+    }
+}
 .menu-panel {
     $menu-height: 80px;
     position: fixed;
     background-color: rgba(20, 20, 20, 0.8);
-    width: 115px;
+    width: 100px;
     height: 100vh;
     z-index: 11;
     overflow-y: hidden;
@@ -184,9 +189,9 @@ body {
         }
         &-text {
             color: #b0b5c4;
-            font-size: 8pt;
+            font-size: 7pt;
             margin-top: 15px;
-            font-weight: bold;
+            font-family: fontbold;
         }
         &:hover,
         &.active {
@@ -213,6 +218,9 @@ body {
                 }
                 &[data-index="launchpad"] {
                     content: url("@/assets/img/menu-panel/launchpad-g.png");
+                }
+                &[data-index="gamification"] {
+                    content: url("@/assets/img/menu-panel/gamification-g.png");
                 }
             }
         }
@@ -285,4 +293,26 @@ body {
     line-height: 15pt;
     font-size: 10pt;
     cursor: pointer;
+}
+
+.footer {
+    text-align: center;
+    .icon {
+        width: 45px;
+    }
+    .logo-footer {
+        width: 120px;
+    }
+    .footer-copyright {
+        font-size: 11pt;
+    }
+    @include sm {
+        .icon {
+            width: 35px;
+        }
+        .footer-copyright {
+            font-size: 10pt;
+            line-height: 16pt;
+        }
+    }
 }

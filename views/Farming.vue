@@ -1,7 +1,8 @@
 <template>
   <div>
     <FarmingPanel />
-    <div class="col-12">
+    <Loading v-if="!isFetchingCompleted" />
+    <div v-else class="col-12">
       <div v-if="isLiveFarming" class="row">
         <FarmingCard
           v-for="(data, index) in dataFetchFarmingInfoLive"
@@ -9,6 +10,9 @@
           cardType="farming"
           :key="index"
         />
+        <div v-if="dataFetchFarmingInfoLive.length === 0">
+          <EmptyAnim />
+        </div>
       </div>
       <div v-else class="row">
         <FarmingCard
@@ -32,12 +36,16 @@ import EventBus from "~/event/EventBus";
 import { mapState } from "vuex";
 import Moment from "moment";
 import PoolSingle from "~/utils/SinglePool";
+import EmptyAnim from "~/components/Stuff/EmptyAnim.vue";
+import Loading from "~/components/Stuff/Loading.vue";
 
 export default Vue.extend({
   name: "Home-DEFI",
   components: {
     FarmingCard,
     FarmingPanel,
+    EmptyAnim,
+    Loading,
   },
   props: {},
   data() {
@@ -53,6 +61,9 @@ export default Vue.extend({
   computed: {
     ...mapState("UserInterfaceState", {
       isLiveFarming: "isLiveFarming",
+    }),
+    ...mapState("FetchingState", {
+      isFetchingCompleted: "isCompleted",
     }),
     dataFetchFarmingInfoLive(): PoolSingle[] {
       const arr = [] as PoolSingle[];

@@ -3,6 +3,7 @@ import GafinConfig from "@/constant/config/index";
 import FARMING_SMC_ABI from "@/constant/abi/FarmingContract.abi.json";
 import STAKING_SMC_ABI from "@/constant/abi/StakingContract.abi.json";
 import BigNumber from "bignumber.js";
+import Vue from "vue";
 
 class GafinCryptoClass {
   public web3: Web3;
@@ -21,6 +22,7 @@ class GafinCryptoClass {
       `${await this.web3.eth.getBalance(this.address)}`,
       "ether"
     );
+    Vue.$toast.open("Wallet connected !");
   };
 
   connect = async () => {
@@ -46,6 +48,8 @@ class GafinCryptoClass {
         this.web3 = new Web3(window.ethereum);
         await this.initInfo();
       }
+    } else {
+      Vue.$toast.error("Your browser does not support ethereum env");
     }
   };
 
