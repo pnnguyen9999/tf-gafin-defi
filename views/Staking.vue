@@ -19,7 +19,7 @@
           v-for="(data, index) in dataFetchStakingInfoEnd"
           :dataFarmingCard="data"
           cardType="staking"
-          :key="index"
+          :key="index + 'end'"
         />
       </div>
     </div>

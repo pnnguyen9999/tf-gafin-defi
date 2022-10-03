@@ -50,7 +50,9 @@ export default class PoolStaking extends PoolSingle {
   public async calculate() {
     this.poolEndTime = Web3.utils.hexToNumber(this.poolData[2].hex);
     this.APR = Number(Web3.utils.hexToNumber(this.poolData[7][0][0].hex)) / 100;
-    this.liquidity = Number(Web3.utils.fromWei(this.poolData[3].hex, "ether"));
+    this.liquidity =
+      Number(Web3.utils.fromWei(this.poolData[3].hex, "ether")) *
+      this.tokenInfo.tokenDeposit.fiatPrice;
     // /** @reinitialize user info in pool to fetch reward info*/
     await this.initUserInfoInPool();
   }
@@ -90,6 +92,34 @@ export default class PoolStaking extends PoolSingle {
           Vue.$toast.open("Stake success !");
         } else if (data.status === "EXECUTE_STAKE_FAIL") {
           Vue.$toast.error(`Stake failed !`);
+        }
+      },
+    });
+    await this.initUserInfoInPool();
+  }
+
+  public async harvest() {
+    await GafinCrypto.harvestStaking({
+      poolId: this.poolId,
+      callback: async (data: any) => {
+        if (data.status === "EXECUTE_HARVEST_SUCCESS") {
+          Vue.$toast.open("Harvest success !");
+        } else if (data.status === "EXECUTE_HARVEST_FAIL") {
+          Vue.$toast.error(`Harvest failed !`);
+        }
+      },
+    });
+    await this.initUserInfoInPool();
+  }
+
+  public async unStake() {
+    await GafinCrypto.unStakeStaking({
+      poolId: this.poolId,
+      callback: async (data: any) => {
+        if (data.status === "EXECUTE_UN_STAKE_SUCCESS") {
+          Vue.$toast.open("Withdraw success !");
+        } else if (data.status === "EXECUTE_UN_STAKE_FAIL") {
+          Vue.$toast.error(`Withdraw failed !`);
         }
       },
     });

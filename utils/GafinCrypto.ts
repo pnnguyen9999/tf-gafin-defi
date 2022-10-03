@@ -190,6 +190,47 @@ class GafinCryptoClass {
     return Number(this.web3.utils.fromWei(`${reward.toFixed()}`, "ether"));
   };
 
+  harvestStaking = async ({
+    poolId,
+    callback,
+  }: {
+    poolId: number;
+    callback: any;
+  }) => {
+    const contract = new this.web3.eth.Contract(
+      STAKING_SMC_ABI as any,
+      GafinConfig.STAKING_CONTRACT_ADDRESS
+    );
+    const executeResult = await contract.methods
+      .harvest(poolId)
+      .send({
+        from: this.address,
+      })
+      .on("transactionHash", (hash: any) => {
+        console.log("transactionHash", hash);
+        callback({
+          status: "EXECUTE_HARVEST_SUBMIT",
+          txID: hash,
+        });
+        console.log("transactionHash EXECUTE_HARVEST_SUBMIT", hash);
+      })
+      .then((receipt: any) => {
+        console.log("receipt", receipt);
+        if (receipt.status === true) {
+          callback({
+            status: "EXECUTE_HARVEST_SUCCESS",
+            txID: receipt.transactionHash,
+            gasUsed: receipt.gasUsed,
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+        callback({ status: "EXECUTE_HARVEST_FAIL", error: err.message });
+      });
+    return executeResult;
+  };
+
   harvest = async ({ poolId, callback }: { poolId: number; callback: any }) => {
     const contract = new this.web3.eth.Contract(
       FARMING_SMC_ABI as any,
@@ -321,6 +362,48 @@ class GafinCryptoClass {
     );
     const executeResult = await contract.methods
       .unstake(poolId)
+      .send({
+        from: this.address,
+      })
+      .on("transactionHash", (hash: any) => {
+        console.log("transactionHash", hash);
+        callback({
+          status: "EXECUTE_UN_STAKE_SUBMIT",
+          txID: hash,
+        });
+        console.log("transactionHash EXECUTE_UN_STAKE_SUBMIT", hash);
+      })
+      .then((receipt: any) => {
+        console.log("receipt", receipt);
+        if (receipt.status === true) {
+          callback({
+            status: "EXECUTE_UN_STAKE_SUCCESS",
+            txID: receipt.transactionHash,
+            gasUsed: receipt.gasUsed,
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+        callback({ status: "EXECUTE_UN_STAKE_FAIL", error: err.message });
+      });
+    return executeResult;
+  };
+
+  unStakeStaking = async ({
+    poolId,
+    callback,
+  }: {
+    poolId: number;
+    callback: any;
+  }) => {
+    console.log({ poolId });
+    const contract = new this.web3.eth.Contract(
+      STAKING_SMC_ABI as any,
+      GafinConfig.STAKING_CONTRACT_ADDRESS
+    );
+    const executeResult = await contract.methods
+      .unStake(poolId)
       .send({
         from: this.address,
       })
