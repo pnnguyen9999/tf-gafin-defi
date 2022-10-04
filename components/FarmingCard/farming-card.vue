@@ -20,6 +20,13 @@
           </div>
         </div>
         <div class="d-flex justify-content-between my-2">
+          <div class="">Max cap</div>
+          <div class="">
+            {{ dataFarmingCard.maxCap }}
+            {{ `${dataFarmingCard.tokenInfo.tokenDeposit.name}` }}
+          </div>
+        </div>
+        <div class="d-flex justify-content-between my-2">
           <div class="">Liquidity</div>
           <div class="">$ {{ dataFarmingCard.liquidity.toFixed(2) }}</div>
         </div>

@@ -15,6 +15,12 @@ class GafinCryptoClass {
     this.currentBalance = null as unknown as string;
   }
 
+  reset() {
+    this.web3 = null as unknown as Web3;
+    this.address = null as unknown as string;
+    this.currentBalance = null as unknown as string;
+  }
+
   initInfo = async () => {
     this.web3 = new Web3(window.ethereum);
     this.address = (await this.web3.eth.requestAccounts())[0];

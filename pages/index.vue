@@ -38,12 +38,22 @@ import "../style/main.scss";
 import "animate.css";
 import EventBus from "~/event/EventBus";
 import { mapMutations, mapState } from "vuex";
+import GafinCrypto from "~/utils/GafinCrypto";
 
 export default Vue.extend({
   name: "IndexPage",
   components: { Tabs, Tab, Farming, Staking, MenuPanel, Header, Footer },
   created() {
     EventBus.$on("fetching-completed", this.setCompleteStatusState.bind(this));
+  },
+  mounted() {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", async (accountID: any) => {
+        GafinCrypto.reset();
+        await GafinCrypto.connect();
+        EventBus.$emit("userWalletConnected");
+      });
+    }
   },
   computed: {
     ...mapState("FetchingState", {

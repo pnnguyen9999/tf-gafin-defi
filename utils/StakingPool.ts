@@ -57,6 +57,7 @@ export default class PoolStaking extends PoolSingle {
     this.liquidity =
       Number(Web3.utils.fromWei(this.poolData[3].hex, "ether")) *
       this.tokenInfo.tokenDeposit.fiatPrice;
+    this.maxCap = Number(Web3.utils.fromWei(this.poolData[5].hex, "ether"));
     // /** @reinitialize user info in pool to fetch reward info*/
     await this.initUserInfoInPool();
   }

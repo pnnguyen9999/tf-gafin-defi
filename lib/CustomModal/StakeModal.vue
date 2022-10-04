@@ -59,7 +59,8 @@
         </div>
         <div>
           <div class="stake-btn-wrapper p-3">
-            <div class="btn-cancel" @click="hide">Cancel</div>
+            <div class="btn-cancel" v-if="loading">Cancel</div>
+            <div class="btn-cancel" v-else @click="hide">Cancel</div>
             <div class="btn-confirm grey" v-if="loading">
               <div class="spinner-border spinner-border-sm mx-2" />
               Processing
@@ -274,10 +275,20 @@ export default Vue.extend({
               message: "Amount must be greater than 0",
             };
           } else {
-            this.invalidIndicator = {
-              status: false,
-              message: "",
-            };
+            if (
+              Number(newVal) + Number(this.poolPrototype.totalDeposit) >
+              Number(this.poolPrototype.maxCap)
+            ) {
+              this.invalidIndicator = {
+                status: true,
+                message: "Out of pool capacity",
+              };
+            } else {
+              this.invalidIndicator = {
+                status: false,
+                message: "",
+              };
+            }
           }
         }
       } else {

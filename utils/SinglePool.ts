@@ -25,8 +25,9 @@ export default class PoolSingle {
   protected poolEndTime = 0;
   protected rewardPerSec = 0;
   protected totalReward = 0;
-  protected totalDeposit = 0;
+  public totalDeposit = 0;
   public tokenBalance = 0;
+  public maxCap = 0;
   /**
    * @APR -> chỉ số APR của pool
    * @DEPOSIT_TOKEN_CONTRACT_ADDRESS -> trả về address của token deposit
@@ -118,6 +119,7 @@ export default class PoolSingle {
   public async calculate() {
     this.poolStartTime = Web3.utils.hexToNumber(this.poolData[5].hex);
     this.poolEndTime = Web3.utils.hexToNumber(this.poolData[6].hex);
+    this.maxCap = Number(Web3.utils.fromWei(this.poolData[2].hex, "ether"));
     this.totalDeposit = Number(
       Web3.utils.fromWei(this.poolData[3].hex, "ether")
     );

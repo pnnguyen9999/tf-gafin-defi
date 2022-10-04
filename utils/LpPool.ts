@@ -74,6 +74,7 @@ export default class PoolLp extends PoolSingle {
   public async calculate() {
     this.poolStartTime = Web3.utils.hexToNumber(this.poolData[5].hex);
     this.poolEndTime = Web3.utils.hexToNumber(this.poolData[6].hex);
+    this.maxCap = Number(Web3.utils.fromWei(this.poolData[2].hex, "ether"));
     this.totalDeposit = Number(
       Web3.utils.fromWei(this.poolData[3].hex, "ether")
     );
