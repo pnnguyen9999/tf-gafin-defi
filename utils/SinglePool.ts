@@ -3,6 +3,7 @@ import Vue from "vue";
 import Web3 from "web3";
 import GafinCrypto from "./GafinCrypto";
 import Moment from "moment";
+import { PoolsExternalInfo } from "~/pools/pools";
 export interface ITokenInfo {
   tokenDeposit: {
     name: string;
@@ -50,6 +51,7 @@ export default class PoolSingle {
       ADDRESS: "",
     },
   };
+  public externalUrlInfo = {} as PoolsExternalInfo;
 
   public async updateRealTimeInfo({ _poolData }: { _poolData: any }) {
     this.poolData = _poolData;
@@ -75,9 +77,11 @@ export default class PoolSingle {
   constructor({
     _poolId,
     _tokenInfo,
+    _externalUrlInfo,
   }: {
     _poolId: number;
     _tokenInfo: ITokenInfo;
+    _externalUrlInfo: PoolsExternalInfo;
   }) {
     this.poolId = _poolId;
     this.tokenInfo = {
@@ -89,6 +93,7 @@ export default class PoolSingle {
         name: _tokenInfo.tokenReward.name,
       },
     };
+    this.externalUrlInfo = _externalUrlInfo;
   }
 
   public async getTokenBalance() {

@@ -60,7 +60,11 @@
         <div>
           <div class="stake-btn-wrapper p-3">
             <div class="btn-cancel" @click="hide">Cancel</div>
-            <div class="btn-confirm" @click="confirm">Confirm</div>
+            <div class="btn-confirm grey" v-if="loading">
+              <div class="spinner-border spinner-border-sm mx-2" />
+              Processing
+            </div>
+            <div v-else class="btn-confirm" @click="confirm">Confirm</div>
           </div>
           <div class="pb-3 w-100 text-center title min">
             Get {{ poolPrototype.tokenInfo.tokenDeposit.name }}
@@ -181,6 +185,10 @@
     background-color: #fe8e26;
     border: 1px solid #fe8e26;
     color: #fff;
+    &.grey {
+      background-color: #3f3f3f;
+      border: 1px solid #656565;
+    }
   }
 }
 </style>
@@ -211,6 +219,7 @@ export default Vue.extend({
         status: false,
         message: "",
       },
+      loading: false,
     };
   },
   computed: {
@@ -222,9 +231,21 @@ export default Vue.extend({
     hide() {
       this.visible = false;
     },
+    setLoading(status: boolean) {
+      this.loading = status;
+    },
     async confirm() {
-      await this.poolPrototype.stake(this.tokenAmount);
-      this.tokenBalance = this.poolPrototype.tokenBalance;
+      if (!this.invalidIndicator.status) {
+        this.setLoading(true);
+        await this.poolPrototype.stake(
+          Number(Number(this.tokenAmount).toFixed(10))
+        );
+        this.setLoading(false);
+        this.hide();
+        this.tokenBalance = this.poolPrototype.tokenBalance;
+      } else {
+        this.$toast.error(this.invalidIndicator.message);
+      }
     },
     show(params: StakeModalParams) {
       this.visible = true;
@@ -247,10 +268,17 @@ export default Vue.extend({
             message: "Insufficient funds",
           };
         } else {
-          this.invalidIndicator = {
-            status: false,
-            message: "",
-          };
+          if (Number(newVal) <= 0) {
+            this.invalidIndicator = {
+              status: true,
+              message: "Amount must be greater than 0",
+            };
+          } else {
+            this.invalidIndicator = {
+              status: false,
+              message: "",
+            };
+          }
         }
       } else {
         this.invalidIndicator = {
@@ -264,6 +292,9 @@ export default Vue.extend({
     const CastedModal: any = Modal;
     CastedModal.EventBus.$on("show", (params: any) => {
       this.show(params);
+    });
+    CastedModal.EventBus.$on("hide", () => {
+      this.hide();
     });
   },
 });

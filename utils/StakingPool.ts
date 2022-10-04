@@ -5,17 +5,21 @@ import PoolSingle, { ITokenInfo } from "./SinglePool";
 import LP_ABI from "@/constant/abi/LpContract.abi.json";
 import GafinCrypto from "./GafinCrypto";
 import Vue from "vue";
+import { PoolsExternalInfo } from "~/pools/pools";
 export default class PoolStaking extends PoolSingle {
   constructor({
     _poolId,
     _tokenInfo,
+    _externalUrlInfo,
   }: {
     _poolId: number;
     _tokenInfo: ITokenInfo;
+    _externalUrlInfo: PoolsExternalInfo;
   }) {
     super({
       _poolId,
       _tokenInfo,
+      _externalUrlInfo,
     });
   }
 

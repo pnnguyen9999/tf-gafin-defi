@@ -3,6 +3,7 @@ import Web3 from "web3";
 import GafinConfig from "~/constant/config";
 import PoolSingle, { ITokenInfo } from "./SinglePool";
 import LP_ABI from "@/constant/abi/LpContract.abi.json";
+import { PoolsExternalInfo } from "~/pools/pools";
 
 export default class PoolLp extends PoolSingle {
   private token0Fiat = 0;
@@ -13,13 +14,16 @@ export default class PoolLp extends PoolSingle {
   constructor({
     _poolId,
     _tokenInfo,
+    _externalUrlInfo,
   }: {
     _poolId: number;
     _tokenInfo: ITokenInfo;
+    _externalUrlInfo: PoolsExternalInfo;
   }) {
     super({
       _poolId,
       _tokenInfo,
+      _externalUrlInfo,
     });
   }
   public async updateRealTimeInfo({ _poolData }: { _poolData: any }) {

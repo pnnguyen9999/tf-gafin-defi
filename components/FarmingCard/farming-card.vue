@@ -92,6 +92,35 @@
       </div>
       <div v-show="isShowExpand" class="farming-card--expand">
         <hr />
+        <div class="d-flex align-items-center mb-3">
+          <a
+            class="card-url"
+            :href="dataFarmingCard?.externalUrlInfo?.getCoinUrl"
+            target="_blank"
+            >{{
+              `Get ${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
+            }}</a
+          >
+          <img src="@/assets/img/url.png" />
+        </div>
+        <div class="d-flex align-items-center mb-3">
+          <a
+            class="card-url"
+            :href="dataFarmingCard?.externalUrlInfo?.viewContract"
+            target="_blank"
+            >View Contract</a
+          >
+          <img src="@/assets/img/url.png" />
+        </div>
+        <div class="d-flex align-items-center mb-3">
+          <a
+            class="card-url"
+            :href="dataFarmingCard?.externalUrlInfo?.pairInfo"
+            target="_blank"
+            >See Pair Info</a
+          >
+          <img src="@/assets/img/url.png" />
+        </div>
       </div>
     </div>
     <div
@@ -152,9 +181,35 @@
             <div class="row">
               <div class="col-md-4 d-flex align-items-center">
                 <div>
-                  <div>Get TOKEN - BNB LP</div>
-                  <div>View Contract</div>
-                  <div>See Pair Info</div>
+                  <div class="d-flex align-items-center mb-3">
+                    <a
+                      class="card-url"
+                      :href="dataFarmingCard?.externalUrlInfo?.getCoinUrl"
+                      target="_blank"
+                      >{{
+                        `Get ${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
+                      }}</a
+                    >
+                    <img src="@/assets/img/url.png" />
+                  </div>
+                  <div class="d-flex align-items-center mb-3">
+                    <a
+                      class="card-url"
+                      :href="dataFarmingCard?.externalUrlInfo?.viewContract"
+                      target="_blank"
+                      >View Contract</a
+                    >
+                    <img src="@/assets/img/url.png" />
+                  </div>
+                  <div class="d-flex align-items-center mb-3">
+                    <a
+                      class="card-url"
+                      :href="dataFarmingCard?.externalUrlInfo?.pairInfo"
+                      target="_blank"
+                      >See Pair Info</a
+                    >
+                    <img src="@/assets/img/url.png" />
+                  </div>
                 </div>
               </div>
               <div
@@ -178,7 +233,7 @@
               <div class="col-md-4 p-1 d-flex justify-content-end">
                 <div class="col-md-8 col-12">
                   <div class="start-farming-container">
-                    <div class="mb-2">Start Farming</div>
+                    <div class="mb-2">Start {{ computedViewMode }}</div>
                     <div
                       class="farming-btn--light"
                       v-show="!userAddress"
@@ -226,7 +281,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { mapState } from "vuex";
@@ -265,7 +319,19 @@ export default Vue.extend({
     ...mapState("UserInterfaceState", {
       viewType: "viewType",
       viewTypeStaking: "viewTypeStaking",
+      currentViewMode: "currentViewMode",
     }),
+    computedViewMode(): string {
+      switch (this.currentViewMode) {
+        case "STAKING": {
+          return "Staking";
+        }
+        default:
+        case "FARMING": {
+          return "Farming";
+        }
+      }
+    },
     computedCardType(): ViewType {
       if (this.cardType === "farming") {
         return this.viewType;
