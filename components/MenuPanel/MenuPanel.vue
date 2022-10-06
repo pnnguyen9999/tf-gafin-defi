@@ -123,7 +123,7 @@ export default Vue.extend({
         {
           imgUrl: "gamification",
           name: "GAMIFICATION",
-          url: "https://gamification.gafin.io/",
+          url: "https://gafin.io/gamification/valorant",
           openInBlank: true,
         },
       ] as IMenuData[],

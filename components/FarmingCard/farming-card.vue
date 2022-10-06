@@ -12,7 +12,7 @@
     >
       <div class="farming-card-content mb-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <img class="token-img" src="@/assets/img/buni-icon.png" />
+          <img class="token-img" src="@/assets/img/hero-arena.png" />
           <div class="fnt-bold">
             {{
               `${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
@@ -22,7 +22,7 @@
         <div class="d-flex justify-content-between my-2">
           <div class="">Max cap</div>
           <div class="">
-            {{ dataFarmingCard.maxCap }}
+            {{ currencyFormat(dataFarmingCard.maxCap) }}
             {{ `${dataFarmingCard.tokenInfo.tokenDeposit.name}` }}
           </div>
         </div>
@@ -138,7 +138,7 @@
         <div class="row">
           <div class="col-4">
             <div class="d-flex align-items-center">
-              <img class="token-img p-1" src="@/assets/img/buni-icon.png" />
+              <img class="token-img p-1" src="@/assets/img/hero-arena.png" />
               <div class="fnt-bold ms-2">
                 {{
                   `${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
@@ -296,6 +296,7 @@ import EventBus from "~/event/EventBus";
 import PoolSingle from "~/utils/SinglePool";
 import { StakeModalParams } from "~/lib/CustomModal/StakeModal.vue";
 import ViewType from "@/constant/UI";
+import { currencyFormat } from "@/utils/Formatter";
 
 export interface IFarmingCard {
   name: string;
@@ -363,6 +364,7 @@ export default Vue.extend({
     },
   },
   methods: {
+    currencyFormat,
     showExpand() {
       this.isShowExpand = !this.isShowExpand;
     },

@@ -6,7 +6,8 @@
         :class="[{ 'is-active': tab.isActive }, 'tab']"
         :key="tab.name"
       >
-        <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a>
+        <!-- <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a> -->
+        <a @click="selectTab(tab)">{{ tab.name }}</a>
       </div>
     </div>
 
@@ -27,6 +28,7 @@
   justify-content: center;
   margin: 15px 0px;
   a {
+    cursor: pointer;
     text-decoration: none;
     color: #b5afaa;
     font-size: 15pt;
@@ -42,6 +44,7 @@
     &.is-active {
       @include tabAnimation(500ms);
       a {
+        cursor: pointer;
         color: #fe8e26;
         font-family: fontbold;
       }

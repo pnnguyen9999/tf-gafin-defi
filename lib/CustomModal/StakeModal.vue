@@ -30,7 +30,7 @@
               >
                 <div>
                   <input
-                    v-model="tokenAmount"
+                    v-model.lazy="formattedAmount"
                     class="token-amount"
                     placeholder="amount..."
                   />
@@ -68,7 +68,9 @@
             <div v-else class="btn-confirm" @click="confirm">Confirm</div>
           </div>
           <div class="pb-3 w-100 text-center title min">
-            Get {{ poolPrototype.tokenInfo.tokenDeposit.name }}
+            <a :href="poolPrototype.externalUrlInfo.getCoinUrl" target="_blank">
+              Get {{ poolPrototype.tokenInfo.tokenDeposit.name }}
+            </a>
           </div>
         </div>
       </div>
@@ -78,6 +80,16 @@
 
 <style lang="scss" scoped>
 @import "@/style/mixins.scss";
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #b5afaa;
+  font-size: 11pt;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    color: #fff;
+  }
+}
 .error {
   color: #ef466f;
   font-size: 10pt;
@@ -200,6 +212,7 @@ import { mapState } from "vuex";
 import SinglePool from "~/utils/SinglePool.js";
 import Modal from "./plugin.js";
 import { ViewMode } from "~/store/UserInterfaceState";
+import { currencyFormat } from "@/utils/Formatter";
 
 export interface StakeModalParams {
   modalTitle: string;
@@ -227,8 +240,17 @@ export default Vue.extend({
     ...mapState("UserInterfaceState", {
       currentViewMode: "currentViewMode",
     }),
+    formattedAmount: {
+      get(): string {
+        return this.currencyFormat(this.tokenAmount);
+      },
+      set(value: number) {
+        this.tokenAmount = value;
+      },
+    },
   },
   methods: {
+    currencyFormat,
     hide() {
       this.visible = false;
     },

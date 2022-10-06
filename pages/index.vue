@@ -5,10 +5,10 @@
       <div class="pt-5">
         <Header />
         <Tabs>
-          <Tab name="Farming" :selected="true">
+          <Tab name="Farming">
             <Farming />
           </Tab>
-          <Tab name="Staking">
+          <Tab name="Staking" :selected="true">
             <Staking />
           </Tab>
         </Tabs>
