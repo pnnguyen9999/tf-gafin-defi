@@ -104,6 +104,7 @@ hr {
 }
 .user-avt {
   width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 3px solid #fe8e26;
   background-color: #fff;

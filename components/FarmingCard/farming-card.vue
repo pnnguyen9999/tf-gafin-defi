@@ -136,7 +136,7 @@
     >
       <div class="farming-card-content-rectangle">
         <div class="row">
-          <div class="col-4">
+          <div class="col-md-4 col-5">
             <div class="d-flex align-items-center">
               <img class="token-img p-1" src="@/assets/img/hero-arena.png" />
               <div class="fnt-bold ms-2">
@@ -146,7 +146,7 @@
               </div>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-2 d-none d-md-block">
             <div class="rectangle-item">
               <div class="title">Earned</div>
               <div class="content">
@@ -154,7 +154,7 @@
               </div>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-md-2 col-3">
             <div class="rectangle-item">
               <div class="title">APR</div>
               <div class="content">
@@ -165,7 +165,7 @@
               </div>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-2 d-none d-md-block">
             <div class="rectangle-item">
               <div class="title">Liquidity</div>
               <div class="content">
@@ -173,7 +173,7 @@
               </div>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-4 col-md-2">
             <div class="d-flex flex-column align-items-end">
               <div class="farming-btn--detail" @click="showExpandRectangle">
                 Detail
@@ -184,6 +184,21 @@
         </div>
         <div v-show="isShowExpandRectangle" class="farming-card--expand">
           <hr />
+          <div
+            class="d-flex justify-content-between align-items-center my-2 d-block d-md-none"
+          >
+            <div class="title">Liquidity</div>
+            <div class="content">
+              $ {{ dataFarmingCard.liquidity.toFixed(2) }}
+            </div>
+          </div>
+          <div class="d-flex justify-content-between my-2 d-block d-md-none">
+            <div class="">Earn</div>
+            <div class="">
+              {{ dataFarmingCard.tokenInfo.tokenReward.name }} + Fee
+            </div>
+          </div>
+          <hr />
           <div class="col-12">
             <div class="row">
               <div class="col-md-4 d-flex align-items-center">
@@ -192,7 +207,11 @@
                     <a
                       class="card-url"
                       :href="dataFarmingCard?.externalUrlInfo?.getCoinUrl"
-                      target="_blank"
+                      :target="
+                        dataFarmingCard?.externalUrlInfo?.getCoinUrl
+                          ? '_blank'
+                          : '_self'
+                      "
                       >{{
                         `Get ${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
                       }}</a
@@ -219,26 +238,31 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="col-md-4 harvest-container d-flex justify-content-between align-items-center my-2"
-              >
-                <div>
-                  <div class="my-1">
-                    {{ dataFarmingCard.tokenInfo.tokenReward.name }} EARNED
-                  </div>
-                  <div class="harvest-label">
-                    {{ dataFarmingCard.harvestAmount }}
-                  </div>
-                </div>
+              <div class="col-md-4 my-2">
                 <div
-                  :class="['harvest-btn', canHarvest ? 'can-harvest' : 'none']"
-                  @click="canHarvest ? dataFarmingCard.harvest() : () => {}"
+                  class="harvest-container d-flex justify-content-between align-items-center"
                 >
-                  Harvest
+                  <div>
+                    <div class="my-1">
+                      {{ dataFarmingCard.tokenInfo.tokenReward.name }} EARNED
+                    </div>
+                    <div class="harvest-label">
+                      {{ dataFarmingCard.harvestAmount }}
+                    </div>
+                  </div>
+                  <div
+                    :class="[
+                      'harvest-btn',
+                      canHarvest ? 'can-harvest' : 'none',
+                    ]"
+                    @click="canHarvest ? dataFarmingCard.harvest() : () => {}"
+                  >
+                    Harvest
+                  </div>
                 </div>
               </div>
-              <div class="col-md-4 p-1 d-flex justify-content-end">
-                <div class="col-md-8 col-12">
+              <div class="col-md-4 p-2 d-flex justify-content-end">
+                <div class="col-md-10 col-12">
                   <div class="start-farming-container">
                     <div class="mb-2">Start {{ computedViewMode }}</div>
                     <div

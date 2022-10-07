@@ -7,7 +7,7 @@ import PoolLp from "~/utils/LpPool";
 export interface PoolsExternalInfo {
   getCoinUrl: string;
   viewContract: string;
-  pairInfo: string;
+  pairInfo: string | null;
 }
 const poolExternalUrlInfo_FARM_TOP_TOP: PoolsExternalInfo = {
   getCoinUrl:
@@ -33,9 +33,9 @@ const poolExternalUrlInfo_STAKE_TOP_TOP: PoolsExternalInfo = {
 const poolExternalUrlInfo_STAKE_HERA_HERA: PoolsExternalInfo = {
   getCoinUrl:
     "https://pancakeswap.finance/swap?outputCurrency=0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
-  pairInfo: "",
+  pairInfo: null,
   viewContract:
-    "https://pancakeswap.finance/swap?outputCurrency=0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
+    "https://bscscan.com/token/0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
 };
 /** @newPoolInstance */
 

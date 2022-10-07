@@ -45,7 +45,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    publicPath: 'https://gafin.io/defi'
+    // publicPath: 'https://gafin.io/defi'
   },
 
   server: {
