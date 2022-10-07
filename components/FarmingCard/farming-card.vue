@@ -106,27 +106,25 @@
             target="_blank"
             >{{
               `Get ${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
-            }}</a
-          >
-          <img src="@/assets/img/url.png" />
+            }}
+            <img src="@/assets/img/url.png"
+          /></a>
         </div>
         <div class="d-flex align-items-center mb-3">
           <a
             class="card-url"
             :href="dataFarmingCard?.externalUrlInfo?.viewContract"
             target="_blank"
-            >View Contract</a
-          >
-          <img src="@/assets/img/url.png" />
+            >View Contract <img src="@/assets/img/url.png"
+          /></a>
         </div>
         <div class="d-flex align-items-center mb-3">
           <a
             class="card-url"
             :href="dataFarmingCard?.externalUrlInfo?.pairInfo"
             target="_blank"
-            >See Pair Info</a
-          >
-          <img src="@/assets/img/url.png" />
+            >See Pair Info <img src="@/assets/img/url.png"
+          /></a>
         </div>
       </div>
     </div>
@@ -214,27 +212,25 @@
                       "
                       >{{
                         `Get ${dataFarmingCard.tokenInfo.tokenDeposit.name} - ${dataFarmingCard.tokenInfo.tokenReward.name}`
-                      }}</a
-                    >
-                    <img src="@/assets/img/url.png" />
+                      }}
+                      <img src="@/assets/img/url.png"
+                    /></a>
                   </div>
                   <div class="d-flex align-items-center mb-3">
                     <a
                       class="card-url"
                       :href="dataFarmingCard?.externalUrlInfo?.viewContract"
                       target="_blank"
-                      >View Contract</a
-                    >
-                    <img src="@/assets/img/url.png" />
+                      >View Contract <img src="@/assets/img/url.png"
+                    /></a>
                   </div>
                   <div class="d-flex align-items-center mb-3">
                     <a
                       class="card-url"
                       :href="dataFarmingCard?.externalUrlInfo?.pairInfo"
                       target="_blank"
-                      >See Pair Info</a
-                    >
-                    <img src="@/assets/img/url.png" />
+                      >See Pair Info <img src="@/assets/img/url.png"
+                    /></a>
                   </div>
                 </div>
               </div>
