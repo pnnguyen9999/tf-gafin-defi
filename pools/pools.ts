@@ -40,7 +40,7 @@ const poolExternalUrlInfo_STAKE_HERA_HERA: PoolsExternalInfo = {
 /** @newPoolInstance */
 
 export const poolStaking_HERA = new PoolStaking({
-  _poolId: 0,
+  _poolId: 1,
   _tokenInfo: {
     tokenDeposit: {
       name: "HERA",

@@ -19,10 +19,7 @@ export interface FarmingInfoData {
   pools: PoolSingle[];
   poolsStaking: PoolStaking[];
 }
-enum PoolNumber {
-  POOL1 = 0,
-  POOL2 = 1,
-}
+
 const multicall = new Multicall({
   nodeUrl: GafinConfig.BSC_RPC,
   tryAggregate: true,
@@ -44,7 +41,7 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
         {
           reference: "getPoolInfo1",
           methodName: "getPoolInfo",
-          methodParameters: [0],
+          methodParameters: [1],
         },
       ],
     },
