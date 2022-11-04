@@ -14,7 +14,7 @@ import PoolLp from "./LpPool";
 import PoolStaking from "./StakingPool";
 import Vue from "vue";
 import EventBus from "~/event/EventBus";
-import { poolStaking_HERA } from "~/pools/pools";
+import { poolFarming_HERA_BUSD, poolStaking_HERA } from "~/pools/pools";
 export interface FarmingInfoData {
   pools: PoolSingle[];
   poolsStaking: PoolStaking[];
@@ -31,7 +31,13 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
       reference: "SMC_CONTRACT",
       contractAddress: GafinConfig.FARMING_CONTRACT_ADDRESS,
       abi: FARMING_SMC_ABI,
-      calls: [],
+      calls: [
+        {
+          reference: "getPoolInfo1Farming",
+          methodName: "getPoolInfo",
+          methodParameters: [1],
+        },
+      ],
     },
     {
       reference: "SMC_CONTRACT_STAKING",
@@ -52,6 +58,8 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   console.log(results);
   const INFO_POOL_HERA_STAKING =
     results.results.SMC_CONTRACT_STAKING.callsReturnContext[0].returnValues;
+  const INFO_POOL_HERA_BUSD =
+    results.results.SMC_CONTRACT.callsReturnContext[0].returnValues;
   /**
    * @poolCalculating -----------
    */
@@ -60,9 +68,13 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   await poolStaking_HERA.updateRealTimeInfo({
     _poolData: INFO_POOL_HERA_STAKING,
   });
+  await poolFarming_HERA_BUSD.updateRealTimeInfo({
+    _poolData: INFO_POOL_HERA_BUSD,
+  });
 
   /** @initializing pools*/
   await poolStaking_HERA.calculate();
+  await poolFarming_HERA_BUSD.calculate();
 
   /** @loggingInfo pools*/
   // console.log({ pool1: pool1.APR, pool2: pool2.APR });
@@ -70,7 +82,7 @@ const useFetchFarmingInfo = async (): Promise<FarmingInfoData> => {
   EventBus.$emit("fetching-completed");
 
   return {
-    pools: [],
+    pools: [poolFarming_HERA_BUSD],
     poolsStaking: [poolStaking_HERA],
   };
 };

@@ -4,10 +4,11 @@ import TOP_SMC_ABI from "@/constant/abi/TopContract.abi.json";
 import LP_ABI from "@/constant/abi/LpContract.abi.json";
 import PoolStaking from "~/utils/StakingPool";
 import PoolLp from "~/utils/LpPool";
+import LpPool from "~/utils/LpPool";
 export interface PoolsExternalInfo {
   getCoinUrl: string;
   viewContract: string;
-  pairInfo: string | null;
+  pairInfo: string;
 }
 const poolExternalUrlInfo_FARM_TOP_TOP: PoolsExternalInfo = {
   getCoinUrl:
@@ -33,9 +34,18 @@ const poolExternalUrlInfo_STAKE_TOP_TOP: PoolsExternalInfo = {
 const poolExternalUrlInfo_STAKE_HERA_HERA: PoolsExternalInfo = {
   getCoinUrl:
     "https://pancakeswap.finance/swap?outputCurrency=0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
-  pairInfo: null,
+  pairInfo: "",
   viewContract:
     "https://bscscan.com/token/0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
+};
+
+const poolExternalUrlInfo_FARMING_HERA_BUSD: PoolsExternalInfo = {
+  getCoinUrl:
+    "https://pancakeswap.finance/swap?outputCurrency=0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
+  pairInfo:
+    "https://pancakeswap.finance/swap?outputCurrency=0x49c7295ff86eabf5bf58c6ebc858db4805738c01",
+  viewContract:
+    "https://bscscan.com/address/0xbcabbaa789fd1a503d139c857499e21b4909d69a",
 };
 /** @newPoolInstance */
 
@@ -51,4 +61,18 @@ export const poolStaking_HERA = new PoolStaking({
     },
   },
   _externalUrlInfo: poolExternalUrlInfo_STAKE_HERA_HERA,
+});
+
+export const poolFarming_HERA_BUSD = new LpPool({
+  _poolId: 1,
+  _tokenInfo: {
+    tokenDeposit: {
+      name: "HERA/BUSD LP",
+      ABI: TOP_SMC_ABI,
+    },
+    tokenReward: {
+      name: "HERA",
+    },
+  },
+  _externalUrlInfo: poolExternalUrlInfo_FARMING_HERA_BUSD,
 });
