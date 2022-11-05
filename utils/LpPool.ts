@@ -11,20 +11,24 @@ export default class PoolLp extends PoolSingle {
   private token0Reserve = 0;
   private token1Reserve = 0;
   private totalSupplyContractFarmLP = 0;
+  private token1FiatIdCoingecko = "";
   constructor({
     _poolId,
     _tokenInfo,
     _externalUrlInfo,
+    _token1FiatIdCoingecko,
   }: {
     _poolId: number;
     _tokenInfo: ITokenInfo;
     _externalUrlInfo: PoolsExternalInfo;
+    _token1FiatIdCoingecko: string;
   }) {
     super({
       _poolId,
       _tokenInfo,
       _externalUrlInfo,
     });
+    this.token1FiatIdCoingecko = _token1FiatIdCoingecko;
   }
   public async updateRealTimeInfo({ _poolData }: { _poolData: any }) {
     this.poolData = _poolData;
@@ -53,10 +57,18 @@ export default class PoolLp extends PoolSingle {
         return res.data.data.price;
       });
 
+    // this.token1Fiat = await axios
+    //   .get(`https://api.pancakeswap.info/api/v2/tokens/${token1Address}`)
+    //   .then((res) => {
+    //     return res.data.data.price;
+    //   });
+
     this.token1Fiat = await axios
-      .get(`https://api.pancakeswap.info/api/v2/tokens/${token1Address}`)
+      .get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${this.token1FiatIdCoingecko}&vs_currencies=usd`
+      )
       .then((res) => {
-        return res.data.data.price;
+        return res.data[this.token1FiatIdCoingecko].usd;
       });
 
     console.log({ token0Fiat: this.token0Fiat, token1Fiat: this.token1Fiat });

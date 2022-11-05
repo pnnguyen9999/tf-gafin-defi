@@ -65,6 +65,7 @@ export const poolStaking_HERA = new PoolStaking({
 
 export const poolFarming_HERA_BUSD = new LpPool({
   _poolId: 1,
+  _token1FiatIdCoingecko: "binance-usd",
   _tokenInfo: {
     tokenDeposit: {
       name: "HERA/BUSD LP",
